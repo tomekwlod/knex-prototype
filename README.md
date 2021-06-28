@@ -1,15 +1,15 @@
 [![Build Status](https://travis-ci.org/tomekwlod/knex-prototype.svg?branch=v0.0.117)](https://travis-ci.org/tomekwlod/knex-prototype)
 [![npm version](https://badge.fury.io/js/knex-prototype.svg)](https://badge.fury.io/js/knex-prototype)
 [![codecov](https://codecov.io/gh/tomekwlod/knex-prototype/branch/v0.0.117/graph/badge.svg)](https://codecov.io/gh/tomekwlod/knex-prototype/tree/v0.0.117)
-[![NpmLicense](https://img.shields.io/npm/l/knex-abstract.svg)](https://github.com/knex-abstract/blob/master/LICENSE)
+[![NpmLicense](https://img.shields.io/npm/l/knex-prototype.svg)](https://github.com/knex-prototype/blob/master/LICENSE)
 
 
-[![knex-abstract youtube demo - nested set example](yt.png)](https://youtu.be/d8k98noOR5c)
+[![knex-prototype youtube demo - nested set example](yt.png)](https://youtu.be/d8k98noOR5c)
 
 
 # Installation:
 
-    npx knex-abstract
+    npx knex-prototype
     # follow instruction on the screen
     cd knex-project
     cat test.js
@@ -19,7 +19,7 @@
 
     require('dotenv-up')(4, false, '.env');
     
-    const knex              = require('knex-abstract');
+    const knex              = require('knex-prototype');
     
     const config      = require('config');
     
@@ -40,17 +40,17 @@ See example of [config](models/config.js)
 
 Follow:
 
- - [test cases](https://github.com/tomekwlod/knex-abstract/blob/master/test/knex/mysql/mysql-insert.test.js)
- - [test script](https://github.com/tomekwlod/knex-abstract/blob/master/example/test.js)
+ - [test cases](https://github.com/tomekwlod/knex-prototype/blob/master/test/knex/mysql/mysql-insert.test.js)
+ - [test script](https://github.com/tomekwlod/knex-prototype/blob/master/example/test.js)
  
 # Api
 
 ```javascript
 
-import knex from 'knex-abstract';
+import knex from 'knex-prototype';
 
 const { Opt }           = knex.prototype;
-// or import { Opt } from 'knex-abstract';
+// or import { Opt } from 'knex-prototype';
 
 const prototype         = knex.prototype;
 
@@ -263,7 +263,7 @@ Example use case:
 ```javascript
 
 // tags.js
-const abstract          = require('knex-abstract');
+const abstract          = require('knex-prototype');
 
 const extend            = abstract.extend;
 
@@ -271,7 +271,7 @@ const prototype         = abstract.prototype;
 
 const a                 = prototype.a;
 
-const nestedset         = require('knex-abstract/nestedset');
+const nestedset         = require('knex-prototype/nestedset');
 
 const table             = 'tags';
 
@@ -295,7 +295,7 @@ And from now on manager will have extra available methods:
 
 ```javascript
 
-const knex          = require('knex-abstract');
+const knex          = require('knex-prototype');
 
 (async function () {
     
@@ -327,7 +327,7 @@ const knex          = require('knex-abstract');
 
 ```javascript
 
-const abstract          = require('knex-abstract');
+const abstract          = require('knex-prototype');
 
 const { Opt }           = abstract;
 
@@ -437,7 +437,7 @@ const path              = require('path');
 
 const log               = require('inspc');
 
-const knex              = require('knex-abstract');
+const knex              = require('knex-prototype');
 
 const extend            = knex.extend;
 
@@ -520,8 +520,8 @@ knex.init({
 
 ```bash
 
-git clone https://github.com/tomekwlod/knex-abstract.git 
-cd knex-abstract
+git clone https://github.com/tomekwlod/knex-prototype.git 
+cd knex-prototype
 make doc
 sleep 10 # give little time for mysql docker to start
 make ct

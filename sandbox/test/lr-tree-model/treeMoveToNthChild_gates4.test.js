@@ -4,7 +4,7 @@ const path              = require('path');
 
 const log               = require('inspc');
 
-const knex              = require('knex-abstract');
+const knex              = require('knex-prototype');
 
 require('dotenv-up')(4, false, 'tests');
 
@@ -59,7 +59,6 @@ const test = async (opt, equal) => {
         await mtree.treeMoveToNthChild({
             ...opt,
             gate        : true,
-            strict: true,
         });
     }
     catch (e) {
@@ -73,90 +72,71 @@ const test = async (opt, equal) => {
     }, null, 4));
 }
 
-it('nestedset - treeMoveToNthChild #1 mid', async done => {
+it('nestedset - treeMoveToNthChild #5', async done => {
 
     await test({
-        sourceId    : 12,
-        parentId    : 3,
-        nOneIndexed : 11,
-    }, '#1');
-
-    done()
-});
-
-it('nestedset - treeMoveToNthChild #1 last (implicit)', async done => {
-
-    await test({
-        sourceId    : 12,
-        parentId    : 3,
-        // nOneIndexed : 11,
-    }, '#1');
-
-    done()
-});
-
-it('nestedset - treeMoveToNthChild #1 last (explicit)', async done => {
-
-    await test({
-        sourceId    : 12,
-        parentId    : 3,
-        nOneIndexed : 12,
-    }, '#1');
-
-    done()
-});
-
-it('nestedset - treeMoveToNthChild #1 last (beyond range)', async done => {
-
-    await test({
-        sourceId    : 12,
-        parentId    : 3,
-        nOneIndexed : 120,
-    }, '#1');
-
-    done()
-});
-
-it('nestedset - treeMoveToNthChild #same-index', async done => {
-
-    await test({
-        sourceId    : 5,
+        sourceId    : 30,
         parentId    : 3,
         nOneIndexed : 2,
-    }, '#same-index');
+    }, '#5');
 
     done()
 });
 
-it('nestedset - treeMoveToNthChild #2 regular', async done => {
+it('nestedset - treeMoveToNthChild #5 2', async done => {
 
     await test({
-        sourceId    : 12,
+        sourceId    : 23,
         parentId    : 3,
         nOneIndexed : 2,
-    }, '#2');
+    }, '#5');
 
     done()
 });
 
-it('nestedset - treeMoveToNthChild #2', async done => {
+
+it('nestedset - treeMoveToNthChild #5 3', async done => {
 
     await test({
-        sourceId    : 35,
+        sourceId    : 24,
         parentId    : 3,
-        nOneIndexed : 1,
-    }, '#2');
+        nOneIndexed : 2,
+    }, '#5');
 
     done()
 });
 
-it('nestedset - treeMoveToNthChild #2 - minus', async done => {
+it('nestedset - treeMoveToNthChild #5 4', async done => {
 
     await test({
-        sourceId    : 35,
+        sourceId    : 15,
         parentId    : 3,
-        nOneIndexed : -10,
-    }, '#2');
+        nOneIndexed : 2,
+    }, '#5');
 
     done()
 });
+
+it('nestedset - treeMoveToNthChild #5 5', async done => {
+
+    await test({
+        sourceId    : 23,
+        parentId    : 1,
+        nOneIndexed : 2,
+    }, '#5');
+
+    done()
+});
+
+
+it('nestedset - treeMoveToNthChild #5 6', async done => {
+
+    await test({
+        sourceId    : 23,
+        parentId    : 1,
+        // nOneIndexed : 2,
+    }, '#5');
+
+    done()
+});
+

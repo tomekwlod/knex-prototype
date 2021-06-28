@@ -1,5 +1,5 @@
 
-const knex              = require('knex-abstract');
+const knex              = require('knex-prototype');
 
 const log               = require('inspc');
 

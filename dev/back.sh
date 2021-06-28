@@ -51,17 +51,17 @@ sudo chmod -R a+w .
 
 rm -rf github/example/*
 
-if [ -e knex-abstract/node_modules ]; then
-    mv knex-abstract/node_modules knex-node_modules
+if [ -e knex-prototype/node_modules ]; then
+    mv knex-prototype/node_modules knex-node_modules
 fi;
 
-cp -R knex-abstract/* github/example/
+cp -R knex-prototype/* github/example/
 cp -R back.sh github/dev/back.sh
 cp -R test.sh github/dev/test.sh
 cp -R Makefile github/dev/Makefile
 
 if [ -e knex-node_modules ]; then
-    mv knex-node_modules knex-abstract/node_modules
+    mv knex-node_modules knex-prototype/node_modules
 fi;
 
 set +e

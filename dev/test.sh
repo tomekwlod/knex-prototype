@@ -42,23 +42,23 @@ sudo rm -rf knex-prototype
 mkdir knex-prototype
 cp -R github/example/* ./knex-prototype/
 
-#mv node_modules knex-abstract/node_modules || true
+#mv node_modules knex-prototype/node_modules || true
 
-    #mv node_modules_puppeteer knex-abstract/puppeteer/node_modules || true
+    #mv node_modules_puppeteer knex-prototype/puppeteer/node_modules || true
 
-#if [ ! -e knex-abstract/node_modules/knex-abstract ]; then
+#if [ ! -e knex-prototype/node_modules/knex-prototype ]; then
 
-    (cd knex-abstract && yarn)
+    (cd knex-prototype && yarn)
 #fi
 
-    #if [ ! -e knex-abstract/puppeteer/node_modules/puppeteer ]; then
+    #if [ ! -e knex-prototype/puppeteer/node_modules/puppeteer ]; then
 
-    #    (cd knex-abstract/puppeteer && yarn)
+    #    (cd knex-prototype/puppeteer && yarn)
     #fi
 
-(cd knex-abstract && npm link knex-abstract)
+(cd knex-prototype && npm link knex-prototype)
 
 echo 'Should be symlink not real directory:';
-(cd knex-abstract && ls -la node_modules | grep knex-abstract)
+(cd knex-prototype && ls -la node_modules | grep knex-prototype)
 
-#(cd knex-abstract && sudo yarn dev)
+#(cd knex-prototype && sudo yarn dev)

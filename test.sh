@@ -10,8 +10,8 @@ function green {
 
 
 
-        # to make sure that knex-abstract is linked -
-        # it is reaquired for testing due to require('knex-abstract') in tests
+        # to make sure that knex-prototype is linked -
+        # it is reaquired for testing due to require('knex-prototype') in tests
 
         LOCVER="$(node install/install.js --is-linked)";
 
@@ -27,9 +27,9 @@ function green {
             yarn add jest --dev
         fi
 
-        if [[ "$(knex-abstract --is-linked)" = "$LOCVER" ]]; then
+        if [[ "$(knex-prototype --is-linked)" = "$LOCVER" ]]; then
 
-            { green "knex-abstract is linked globally"; } 2>&3
+            { green "knex-prototype is linked globally"; } 2>&3
 
         else
 
@@ -40,9 +40,9 @@ function green {
 
             npm link
 
-            if [[ "$(knex-abstract --is-linked)" != "$LOCVER" ]]; then
+            if [[ "$(knex-prototype --is-linked)" != "$LOCVER" ]]; then
 
-                { error "\n\n    can't link knex-abstract\n\n"; } 2>&3
+                { error "\n\n    can't link knex-prototype\n\n"; } 2>&3
 
                 exit 1
             fi
@@ -52,17 +52,17 @@ function green {
         fi
 
 
-        if [[ "$(node node_modules/knex-abstract/install/install.js --is-linked)" = "$LOCVER" ]]; then
+        if [[ "$(node node_modules/knex-prototype/install/install.js --is-linked)" = "$LOCVER" ]]; then
 
-            { green "knex-abstract is linked in main target directory"; } 2>&3
+            { green "knex-prototype is linked in main target directory"; } 2>&3
 
         else
 
-            npm link knex-abstract
+            npm link knex-prototype
 
-            if [[ "$(node node_modules/knex-abstract/install/install.js --is-linked)" != "$LOCVER" ]]; then
+            if [[ "$(node node_modules/knex-prototype/install/install.js --is-linked)" != "$LOCVER" ]]; then
 
-                { red "can't link knex-abstract in main target directory."; } 2>&3
+                { red "can't link knex-prototype in main target directory."; } 2>&3
 
                 exit 1
             fi
@@ -129,14 +129,14 @@ else
     { green "local jest - found"; } 2>&3
 fi
 
-if [[ "$(ls -la node_modules/knex-abstract | grep knex-abstract)" = *"->"* ]]; then
+if [[ "$(ls -la node_modules/knex-prototype | grep knex-prototype)" = *"->"* ]]; then
 
-    { green "knex-abstract is linked"; } 2>&3
+    { green "knex-prototype is linked"; } 2>&3
 
 else
 
     npm link
-    (cd test && npm link knex-abstract)
+    (cd test && npm link knex-prototype)
 fi
 
 # --bail \

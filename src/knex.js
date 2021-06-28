@@ -1,6 +1,6 @@
 
 /**
- * require('knex-abstract').init();
+ * require('knex-prototype').init();
  */
 
 //import configServer from 'server.config';
@@ -74,7 +74,7 @@ const tool = name => {
 
     if (config === false) {
 
-        throw new Error(`Before use require('knex-abstract')() first use require('knex-abstract').init(config) and pass config`)
+        throw new Error(`Before use require('knex-prototype')() first use require('knex-prototype').init(config) and pass config`)
     }
 
     if ( ! name ) {
@@ -84,7 +84,7 @@ const tool = name => {
 
     if ( ! config[name]) {
 
-        throw new Error(`knex-abstract: Connection '${name}' is not defined in config.js under 'knex' key`);
+        throw new Error(`knex-prototype: Connection '${name}' is not defined in config.js under 'knex' key`);
     }
 
     return connections[name];
@@ -94,24 +94,24 @@ tool.init = c => {
 
     if (connections !== false) {
 
-        return `knex-abstract: Connections are already initialized, no need to call init() again`;
+        return `knex-prototype: Connections are already initialized, no need to call init() again`;
     }
 
     if ( ! c || ! isObject(c) ) {
 
-        throw new Error(`knex-abstract: init(config), config has to be an object`);
+        throw new Error(`knex-prototype: init(config), config has to be an object`);
     }
 
     const keys = Object.keys(c);
 
     if ( ! keys.length ) {
 
-        throw new Error(`knex-abstract: key 'knex' is an object but there is not connections defined in it`);
+        throw new Error(`knex-prototype: key 'knex' is an object but there is not connections defined in it`);
     }
 
     if (typeof c.def !== 'string') {
 
-        throw new Error(`knex-abstract: Not 'def' connection specified: 'config.js' for knex key 'knex.def'`);
+        throw new Error(`knex-prototype: Not 'def' connection specified: 'config.js' for knex key 'knex.def'`);
     }
 
     config = c;

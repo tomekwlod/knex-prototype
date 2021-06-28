@@ -1,5 +1,5 @@
 
-const abstract          = require('knex-abstract');
+const abstract          = require('knex-prototype');
 
 const extend            = abstract.extend;
 

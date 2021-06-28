@@ -12,7 +12,7 @@ function Opt(opt) {
 
     if ( this instanceof Opt ) {
 
-        throw new Error(`knex-abstract: don't use 'new' operator with Opt() object, just use it as a function`);
+        throw new Error(`knex-prototype: don't use 'new' operator with Opt() object, just use it as a function`);
     }
 
     if ( isObject(opt) ) {
@@ -26,7 +26,7 @@ function Opt(opt) {
 
         if ( typeof opt !== 'boolean' ) {
 
-            throw new Error(`knex-abstract: new Opt(opt) opt is not object nor boolean`);
+            throw new Error(`knex-prototype: new Opt(opt) opt is not object nor boolean`);
         }
 
         opt = {
