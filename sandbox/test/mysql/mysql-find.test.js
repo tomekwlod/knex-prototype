@@ -36,12 +36,12 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw({}, `truncate many`);
+    await manc.raw(`truncate many`);
 };
 
 it(`knex - mysql - find`, async done => {
 
-    const {created, updated, roles, config, password, ...rest} = await man.find({}, 1);
+    const {created, updated, roles, config, password, ...rest} = await man.find(1);
 
     expect(rest).toEqual({
         "email": "admin@gmail.com",
@@ -57,7 +57,7 @@ it(`knex - mysql - find`, async done => {
 
 it(`knex - mysql - find with custom select`, async done => {
 
-    const data = await man.find({}, 1, 'lastName, firstName');
+    const data = await man.find(1, 'lastName, firstName');
 
     expect(data).toEqual({
         "lastName": "admin",

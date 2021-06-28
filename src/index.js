@@ -1,20 +1,20 @@
 
-const knex          = require('./knex');
+const knex            = require('./knex');
 
-const extend        = require('./extend');
+const extend          = require('./extend');
 
-const mysql         = require('./mysql');
+const mysql           = require('./mysql');
 
-const Opt           = require('./Opt');
+const Opt             = require('./Opt');
 
-const promiseall    = require('nlab/promiseall');
+const promiseall      = require('nlab/promiseall');
 
-knex.extend         = extend;
+knex.extend           = extend;
 
-knex.prototype      = mysql;
+knex.prototype_mysql  = mysql;
 
-knex.Opt            = Opt;
+knex.Opt              = Opt;
 
-knex.promiseall     = promiseall;
+knex.promiseall       = promiseall;
 
-module.exports      = knex;
+module.exports        = knex;

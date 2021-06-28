@@ -3,11 +3,9 @@ const abstract          = require('knex-prototype');
 
 const extend            = abstract.extend;
 
-const prototype         = abstract.prototype;
+const prototype         = abstract.prototype_mysql;
 
 const log               = require('inspc');
-
-const a                 = prototype.a;
 
 module.exports = knex => extend(knex, prototype, {
     fromDb: async function (row, opt, trx) {

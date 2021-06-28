@@ -124,6 +124,8 @@ tool.init = c => {
 
         extend(acc[name], name);
 
+        acc[name].provider = cc.client;
+
         return acc;
     }, {});
 

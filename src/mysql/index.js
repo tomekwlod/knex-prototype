@@ -5,106 +5,40 @@ const isObject          = require('nlab/isObject');
 
 const promiseall        = require('nlab/promiseall');
 
-const Opt = require('../Opt');
-
-function a(args) {
-
-    args = [...args];
-
-    let trx         = false;
-
-    for (let i = 0, l = args.length, a ; i < l ; i += 1 ) {
-
-        a = args[i];
-
-        if (trx === false && typeof a === 'function') {
-
-            trx         = a;
-
-            args.splice(i, 1);
-
-            break;
-        }
-    }
-
-    let opt         = false;
-
-    for (let i = 0, l = args.length, a ; i < l ; i += 1 ) {
-
-        a = args[i];
-
-        if (opt === false && isObject(a) && a.isProxy) {
-
-            opt         = a;
-
-            args.splice(i, 1);
-
-            break;
-        }
-    }
-
-    if ( ! opt ) {
-
-        for (let i = 0, l = args.length, a ; i < l ; i += 1 ) {
-
-            a = args[i];
-
-            if (opt === false && typeof a === 'boolean') {
-
-                opt         = Opt(a);
-
-                break;
-            }
-        }
-    }
-
-    if ( ! opt ) {
-
-        opt = Opt(false);
-    }
-
-    args = args
-        .filter(a => typeof a !== 'boolean')
-        // .filter(a => a !== null)
-        .filter(a => a !== undefined)
-    ;
-
-    return [opt, trx, ...args];
-}
-
 function prototype(knex, table, id) {
     this.knex           = knex;
     this.__table        = table;
     this.__id           = id;
+
+    this.escaper = "`";
+    if (knex.provider === 'postgresql') {
+        this.escaper = '"';
+    }
 }
 
-prototype.prototype.th = function (msg) {
-    return new Error(`${this.__table}.js error: ${msg}`);
+prototype.prototype.Error = function (msg) {
+    return new Error(`${this.__table || 'index'}.js error: ${msg}`);
 };
 
-prototype.prototype.initial = function () {
-    return {prototype:'MYSQL: prototype.initial()'};
+prototype.prototype.initial = function (opt) {
+    return { prototype: 'MYSQL: prototype.initial()' };
 }
 
-prototype.prototype.fromDb = function (row, opt, trx) {
+prototype.prototype.fromDb = function (opt, rows) {
+    return rows;
+}
+prototype.prototype.toDb = function (opt, row) {
     return row;
 }
-prototype.prototype.toDb = function (row, opt, trx) {
-    return row;
-}
 
-prototype.prototype.raw = async function (...args) {
-
-    let [opt, trx, query, params] = a(args);
-
-    const deep = ( (Number.isInteger(opt.debug) && opt.debug > 1) ? opt.debug : undefined);
+prototype.prototype.raw = async function (opt = {}, query, params) {
 
     if (typeof query !== 'string') {
 
-        throw this.th(`query '${query}' is not a string`);
+        throw this.Error(`query '${query}' is not a string`);
     }
 
-    const instance = trx || this.knex;
+    const instance = opt.trx || this.knex;
 
     if (Array.isArray(params)) {
 
@@ -142,7 +76,7 @@ prototype.prototype.raw = async function (...args) {
             }
             else {
 
-                throw this.th(`If params given as an array then you can't use other named binding then ':id:' and ':table:'`);
+                throw this.Error(`If params given as an array then you can't use other named binding then ':id:' and ':table:'`);
             }
 
             params.splice(i, 0, this[name]);
@@ -154,10 +88,10 @@ prototype.prototype.raw = async function (...args) {
             return '??';
         });
 
-        opt.debug && log.dump({
+        opt.debug && console.log({
             query,
             params,
-        }, deep);
+        });
 
         return instance.raw(query, params).catch(e => {
 
@@ -178,19 +112,19 @@ prototype.prototype.raw = async function (...args) {
 
     if (query.indexOf(':table:') > -1) {
 
-        if ( params && typeof params.__table !== 'undefined' ) {
+        if (params && typeof params.__table !== 'undefined') {
 
-            throw this.th(`Binding name ':table:' is reserved, if you are using it then you shouldn't specify parameter '__table' manually`);
+            throw this.Error(`Binding name ':table:' is reserved, if you are using it then you shouldn't specify parameter '__table' manually`);
         }
 
-        if ( ! isObject(params) ) {
+        if (!isObject(params)) {
 
             params = {};
         }
 
-        if ( ! this.__table ) {
+        if (!this.__table) {
 
-            throw this.th(`this.__table not specified`)
+            throw this.Error(`this.__table not specified`)
         }
 
         params.__table = this.__table;
@@ -198,19 +132,19 @@ prototype.prototype.raw = async function (...args) {
 
     if (query.indexOf(':id:') > -1) {
 
-        if ( params && typeof params.__id !== 'undefined' ) {
+        if (params && typeof params.__id !== 'undefined') {
 
-            throw this.th(`Binding name ':id:' is reserved, if you are using it then you shouldn't specify parameter '__id' manually`);
+            throw this.Error(`Binding name ':id:' is reserved, if you are using it then you shouldn't specify parameter '__id' manually`);
         }
 
-        if ( ! isObject(params) ) {
+        if (!isObject(params)) {
 
             params = {};
         }
 
-        if ( ! this.__id ) {
+        if (!this.__id) {
 
-            throw this.th(`this.__id not specified`)
+            throw this.Error(`this.__id not specified`)
         }
 
         params.__id = this.__id;
@@ -225,9 +159,9 @@ prototype.prototype.raw = async function (...args) {
             name = '__' + name;
         }
 
-        if ( typeof params[name] === 'undefined') {
+        if (typeof params[name] === 'undefined') {
 
-            throw this.th(`Query: '${query}' error: value for parameter '${name}' is missing on the list of given parameters: ` + JSON.stringify(params));
+            throw this.Error(`Query: '${query}' error: value for parameter '${name}' is missing on the list of given parameters: ` + JSON.stringify(params));
         }
 
         const placeholder = semi ? '??' : '?';
@@ -246,11 +180,11 @@ prototype.prototype.raw = async function (...args) {
         }
     });
 
-    opt.debug && log.dump({
+    opt.debug && console.log({
         query,
         params,
         queryParams,
-    }, deep);
+    });
 
     return instance.raw(query, queryParams).catch(e => {
 
@@ -270,86 +204,98 @@ prototype.prototype.raw = async function (...args) {
     });
 }
 
-prototype.prototype.query = function (...args) {
+prototype.prototype.query = function (opt, ...args) {
 
-    return this.raw(...args).then(result => result[0])
+    if (!isObject(opt)) {
+
+        throw this.Error(`knex.fetch() error: opt is not an object`);
+    }
+
+    return this.raw(opt, ...args).then(
+      result => {
+          if (this.provider === 'postgresql') {
+
+              return result.rows;
+          }
+          else {
+
+              return result[0];
+          }
+      }
+    )
 };
 
-prototype.prototype.fetch = function (...args) {
+prototype.prototype.fetch = function (opt, ...args) {
 
-    let [opt, trx] = a(args);
+    if (!isObject(opt)) {
 
-    let promise = this.query(...args);
+        throw this.Error(`knex.fetch() error: opt is not an object`);
+    }
 
-    if ( opt.fromDb !== false && opt.both !== false ) {
+    let promise = this.query(opt, ...args);
 
-        return promise.then(data => promiseall(data.map(d => this.fromDb(d, opt, trx))));
+    if (opt.fromDb !== false && opt.both !== false) {
+
+        return promise.then(rows => this.fromDb(opt, rows));
     }
 
     return promise;
 };
 
-prototype.prototype.queryOne = function (...args) {
+prototype.prototype.queryOne = function (opt, ...args) {
 
-    let [opt, trx] = a(args);
+    let promise = this.query(opt, ...args)
+      .then(rows => {
 
-    let promise = this.query(...args)
-        .then(rows => {
+          if (rows.length < 2) {
 
-            if (rows.length < 2) {
+              return rows.pop(); // return first row from result - but only if there is only one
+          }
 
-                return rows.pop(); // return first row from result - but only if there is only one
-            }
-
-            return Promise.reject('found ' + rows.length + ' rows, queryOne is designed to fetch first from only one row');
-        })
+          return Promise.reject('found ' + rows.length + ' rows, queryOne is designed to fetch first from only one row');
+      })
     ;
 
-    if ( opt.fromDb !== false && opt.both !== false ) {
+    if (opt.fromDb !== false && opt.both !== false) {
 
-        return promise.then(d => this.fromDb(d, opt, trx));
+        return promise.then(row => this.fromDb(opt, [row])).then(arr => arr[0]);
     }
 
     return promise;
 }
-prototype.prototype.queryColumn = function (...args) {
-    return this.queryOne(...args)
-        .then(row => {
 
-            if (isObject(row)) {
+prototype.prototype.queryColumn = function (opt, ...args) {
+    return this.queryOne(opt, ...args)
+      .then(row => {
 
-                return Object.values(row)[0]; // extract value from first column
-            }
-        })
-    ;
+          if (isObject(row)) {
+
+              return Object.values(row)[0]; // extract value from first column
+          }
+      })
+      ;
 };
 
-prototype.prototype.count = function (...args) {
-
-    let [opt, trx, ...rest] = a(args);
-
-    return this.queryColumn({
-        ...opt,
-        fromDb: false,
-    }, trx, 'SELECT COUNT(*) AS c FROM :table:', ...rest);
+prototype.prototype.count = function (opt, ...args) {
+    return this.queryColumn(opt, 'SELECT COUNT(*) AS c FROM :table:', ...args)
+      .then(c => parseInt(c, 10))
+  ;
 }
 
-prototype.prototype.find = function (...args) {
-
-    let [opt, trx, id, select = '*'] = a(args);
+prototype.prototype.find = function (opt, id, select = '*') {
 
     if (typeof select !== 'string') {
 
-        throw this.th('second argument of find method should be string');
+        throw this.Error('second argument of find method should be string');
     }
 
-    let promise = this.queryOne(opt, trx, `SELECT ${select} FROM :table: WHERE :id: = :id`, {
+    let promise = this.queryOne(opt, `SELECT ${select} FROM :table: WHERE :id: = :id`, {
         id,
     });
 
     if ( opt.fromDb !== false && opt.both !== false ) {
 
-        return promise.then(d => this.fromDb(d, opt, trx));
+        return promise.then(row => this.fromDb(opt, [row])).then(rows => rows[0]);
     }
 
     return promise;
@@ -571,10 +517,6 @@ prototype.prototype.fetchColumnsFiltered = async function (...args) {
         default:
             return list;
     }
-},
-
-  prototype.a     = a;
-
-prototype.Opt   = Opt;
+}
 
 module.exports = prototype;

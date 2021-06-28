@@ -5,11 +5,9 @@ const abstract          = require('knex-prototype');
 
 const extend            = abstract.extend;
 
-const prototype         = abstract.prototype;
+const prototype         = abstract.prototype_mysql;
 
 const log               = require('inspc');
-
-const a                 = prototype.a;
 
 const isObject          = require('nlab/isObject');
 
@@ -43,67 +41,72 @@ select r.id from roles r where r.name = ?
             roles,
         }
     },
-    fromDb: async function (row, opt, trx) {
+    fromDb: async function (opt, rows) {
 
-        if ( ! isObject(row) ) {
+        const tmp = [];
 
-            return row;
-        }
+        let i = -1;
+        for (const row of rows) {
 
-        if (opt.test1) {
+            i += 1;
 
-            delete row.created;
+            if (opt.test1) {
 
-            delete row.updated;
+                delete row.created;
 
-            delete row.id;
+                delete row.updated;
 
-            if ( ! opt.created ) {
+                delete row.id;
 
-                opt.created = true,
+                if ( ! opt.created ) {
 
-                await abstract().model.users.insert(trx, {
-                    firstName: opt.test1,
-                    lastName: 'test',
-                    password: 'psw',
-                    email: 'emailfdsafds',
-                })
+                    opt.created = true,
+
+                      await abstract().model.users.insert(trx, {
+                          firstName: opt.test1,
+                          lastName: 'test',
+                          password: 'psw',
+                          email: 'emailfdsafds',
+                      })
+                }
+
+
+                row.extraFromDb = true;
+
+                return row;
             }
 
+            if (typeof row.roles === 'string') {
 
-            row.extraFromDb = true;
-
-            return row;
-        }
-
-        if (typeof row.roles === 'string') {
-
-            row.roles = row.roles.split(',').map(r => /^\d+$/.test(r) ? parseInt(r, 10) : r);
-        }
-
-        if ( ! Array.isArray(row.roles) ) {
-
-            row.roles = [];
-        }
-
-        if (typeof row.enabled !== 'undefined') {
-
-            row.enabled = !!row.enabled;
-        }
-
-        if (typeof row.config === 'string') {
-
-            try {
-
-                row.config = JSON.parse(row.config);
+                row.roles = row.roles.split(',').map(r => /^\d+$/.test(r) ? parseInt(r, 10) : r);
             }
-            catch (e) {
 
-                row.config = {};
+            if ( ! Array.isArray(row.roles) ) {
+
+                row.roles = [];
             }
+
+            if (typeof row.enabled !== 'undefined') {
+
+                row.enabled = !!row.enabled;
+            }
+
+            if (typeof row.config === 'string') {
+
+                try {
+
+                    row.config = JSON.parse(row.config);
+                }
+                catch (e) {
+
+                    row.config = {};
+                }
+            }
+
+            tmp.push(row);
         }
 
-        return row;
+        return tmp;
     },
     toDb: async function (row, opt, trx) {
 
