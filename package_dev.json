@@ -1,0 +1,55 @@
+{
+  "name": "knex-prototype",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src",
+  "scripts": {
+    "test": "/bin/bash test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomekwlod/knex-prototype.git"
+  },
+  "keywords": [
+    "knex"
+  ],
+  "author": "Szymon Działowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomekwlod/knex-prototype/issues"
+  },
+  "bin": {
+    "knex-prototype": "./install/install.js"
+  },
+  "homepage": "https://github.com/tomekwlod/knex-prototype#readme",
+  "jest": {
+    "verbose": true,
+    "bail": true,
+    "collectCoverage": true,
+    "coverageReporters": [
+      "html",
+      "lcov"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ]
+  },
+  "dependencies": {
+    "@babel/standalone": "^7.4.2",
+    "express": "^4.17.1",
+    "inspc": "^0.0.19",
+    "js-yaml": "^3.13.0",
+    "knex": "^0.21.18",
+    "mysql": "^2.18.1",
+    "nlab": "^0.0.53",
+    "nodemon": "^1.18.10",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "codecov": "^3.1.0",
+    "dotenv-up": "^1.0.30",
+    "jest": "^23.6.0"
+  }
+}

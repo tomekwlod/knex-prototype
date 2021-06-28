@@ -1,0 +1,11 @@
+node_modules
+yarn-error*
+/.idea/
+/local.txt
+/coverage/
+/stopsopa-validator*
+*.tgz
+.env
+/testinstall/
+yarn.lock
+package-lock.json
