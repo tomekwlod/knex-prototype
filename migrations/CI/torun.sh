@@ -27,7 +27,7 @@ trim() {
     echo -n "$var"
 }
 
-MIGRATIONFILES="$(ls -la "$DIR/../src/migration/" | grep '.ts' | wc -l)"
+MIGRATIONFILES="$(/bin/bash "$_DIR/target.sh")"
 
 MIGRATIONFILES="$(trim "$MIGRATIONFILES")"
 
