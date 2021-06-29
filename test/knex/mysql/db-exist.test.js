@@ -14,7 +14,7 @@ it('knex - db exist', async done => {
 
     const users = knex().model.users;
 
-    const list = await users.query('show databases');
+    const list = await users.query({}, 'show databases');
 
     let tmp = list.map(x => Object.values(x)[0]);
 

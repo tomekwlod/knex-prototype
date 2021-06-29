@@ -14,7 +14,7 @@ it('knex - explicit name', async done => {
 
     const man = knex('mysql').model.common;
 
-    const list = await man.query(`show databases`);
+    const list = await man.query({}, `show databases`);
 
     const db = config.mysql.connection.database;
 

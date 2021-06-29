@@ -14,7 +14,7 @@ it('knex - no init', async done => {
 
     try {
 
-        await knex().model.common.query('show databases');
+        await knex().model.common.query({}, 'show databases');
     }
     catch (e) {
 
