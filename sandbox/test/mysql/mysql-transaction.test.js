@@ -40,7 +40,7 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw(`truncate many`);
+    await manc.raw({}, `truncate many`);
 
     await man.raw(`delete from :table: where password like 'trans%'`);
 };

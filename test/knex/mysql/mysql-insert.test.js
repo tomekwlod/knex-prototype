@@ -36,18 +36,18 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw(`truncate many`);
+    await manc.raw({}, `truncate many`);
 };
 
 beforeEach(clear);
 
 it(`knex - mysql - insert`, async done => {
 
-    await manm.insert({
+    await manm.insert({}, {
         title: 'test'
     });
 
-    const id = await manm.insert({
+    const id = await manm.insert({}, {
         title: 'test'
     });
 
@@ -58,7 +58,7 @@ it(`knex - mysql - insert`, async done => {
 
 it(`knex - mysql - insert, hasOwnProperty`, async done => {
 
-    await manm.insert({
+    await manm.insert({}, {
         title: 'test'
     });
 
@@ -73,11 +73,11 @@ it(`knex - mysql - insert, hasOwnProperty`, async done => {
 
     const c = new b('custom');
 
-    const id = await manm.insert(c);
+    const id = await manm.insert({}, c);
 
     expect(id).toEqual(2);
 
-    const count = await manm.count();
+    const count = await manm.count({});
 
     expect(count).toEqual(2);
 

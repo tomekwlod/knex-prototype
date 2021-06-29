@@ -40,7 +40,7 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw(`truncate many`);
+    await manc.raw({}, `truncate many`);
 
     await man.query(`delete from :table: where firstName = :firstName`, {
         firstName,

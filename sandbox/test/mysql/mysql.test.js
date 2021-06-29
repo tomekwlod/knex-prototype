@@ -36,7 +36,7 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw(`truncate many`);
+    await manc.raw({}, `truncate many`);
 };
 
 it('knex - wrong mana', async done => {

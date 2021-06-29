@@ -36,22 +36,22 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw(`truncate many`);
+    await manc.raw({}, `truncate many`);
 };
 
 beforeEach(clear);
 
 it(`knex - mysql - delete`, async done => {
 
-    await manm.insert({
+    await manm.insert({}, {
         title: 'test'
     });
 
-    const affectedRows = await manm.delete(1);
+    const affectedRows = await manm.delete({}, 1);
 
     expect(affectedRows).toEqual(1);
 
-    const all = await manm.findAll();
+    const all = await manm.findAll({});
 
     expect(all).toEqual([]);
 
@@ -60,23 +60,23 @@ it(`knex - mysql - delete`, async done => {
 
 it(`knex - mysql - delete, [1, 3]`, async done => {
 
-    await manm.insert({
+    await manm.insert({}, {
         title: 'test1'
     });
 
-    await manm.insert({
+    await manm.insert({}, {
         title: 'test2'
     });
 
-    await manm.insert({
+    await manm.insert({}, {
         title: 'test3'
     });
 
-    const affectedRows = await manm.delete([1, 3]);
+    const affectedRows = await manm.delete({}, [1, 3]);
 
     expect(affectedRows).toEqual(2);
 
-    const all = await manm.findAll();
+    const all = await manm.findAll({});
 
     expect(all).toEqual([{"id": 2, "title": "test2", "user_id": null}]);
 

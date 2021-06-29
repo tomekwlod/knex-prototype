@@ -397,7 +397,7 @@ prototype.prototype.update = async function (opt, entity = {}, id, ...args) {
 
             if (id.hasOwnProperty(i)) {
 
-                ids.push('"' + i + '" = ?');
+                ids.push(this.escaper + i + this.escaper +' = ?');
 
                 values.push(id[i]);
             }
@@ -422,7 +422,7 @@ prototype.prototype.update = async function (opt, entity = {}, id, ...args) {
               
               return result.length
           } else {
-
+              
               return result.affectedRows
           }
       })
