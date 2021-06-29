@@ -55,7 +55,7 @@ it('knex - wrong mana', async done => {
 
 it('knex - mysql', async done => {
 
-    const list = await man.query(true, 'show databases');
+    const list = await man.query({}, 'show databases');
 
     let tmp = list.map(x => Object.values(x)[0]);
 
@@ -75,7 +75,7 @@ it('knex - mysql', async done => {
 
 it(`knex - mysql - init`, async done => {
 
-    const init = await manc.initial();
+    const init = await manc.initial({});
 
     expect(init).toEqual({prototype:'MYSQL: prototype.initial()'});
 
@@ -84,7 +84,7 @@ it(`knex - mysql - init`, async done => {
 
 it(`knex - mysql - fromDb`, async done => {
 
-    const init = await manc.fromDb({test: true});
+    const init = await manc.fromDb({}, {test: true});
 
     expect(init).toEqual({test: true});
 
@@ -93,7 +93,7 @@ it(`knex - mysql - fromDb`, async done => {
 
 it(`knex - mysql - toDb`, async done => {
 
-    const init = await manc.toDb({test: true});
+    const init = await manc.toDb({}, {test: true});
 
     expect(init).toEqual({test: true});
 
@@ -102,7 +102,7 @@ it(`knex - mysql - toDb`, async done => {
 
 it(`knex - mysql - queryColumn, array params`, async done => {
 
-    const lastName = await man.queryColumn('select lastName from :table: u where u.:id: = ?', [1]);
+    const lastName = await man.queryColumn({}, 'select lastName from :table: u where u.:id: = ?', [1]);
 
     expect(lastName).toEqual('admin');
 
@@ -111,7 +111,7 @@ it(`knex - mysql - queryColumn, array params`, async done => {
 
 it(`knex - mysql - queryColumn, array params, one param is also array`, async done => {
 
-    const data = await man.query('select lastName from :table: u where u.:id: in (?)', [[1, 2]]);
+    const data = await man.query({}, 'select lastName from :table: u where u.:id: in (?)', [[1, 2]]);
 
     expect(data).toEqual([
         {"lastName": "admin"},
@@ -123,7 +123,7 @@ it(`knex - mysql - queryColumn, array params, one param is also array`, async do
 
 it(`knex - mysql - count`, async done => {
 
-    const data = await man.count();
+    const data = await man.count({});
 
     expect(data).toEqual(2);
 

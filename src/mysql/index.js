@@ -236,7 +236,15 @@ prototype.prototype.fetch = function (opt, ...args) {
 
     if (opt.fromDb !== false && opt.both !== false) {
 
-        return promise.then(rows => this.fromDb(opt, rows));
+        return promise.then(rows => {
+
+            if (Array.isArray(rows)) {
+
+                return this.fromDb(opt, rows);
+            }
+
+            return rows;
+        });
     }
 
     return promise;
@@ -258,7 +266,18 @@ prototype.prototype.queryOne = function (opt, ...args) {
 
     if (opt.fromDb !== false && opt.both !== false) {
 
-        return promise.then(row => this.fromDb(opt, [row])).then(arr => arr[0]);
+        return promise
+          .then(row => {
+
+              if (typeof row !== 'undefined') {
+
+                  return this.fromDb(opt, [row]);
+              }
+
+              return [row];
+          })
+          .then(rows => Array.isArray(rows) ? rows[0] : undefined)
+        ;
     }
 
     return promise;
@@ -293,7 +312,16 @@ prototype.prototype.find = function (opt, id, select = '*') {
 
     if (opt.fromDb !== false && opt.both !== false) {
 
-        return promise.then(row => this.fromDb(opt, [row])).then(rows => rows[0]);
+        return promise
+          .then(row => {
+              if (typeof row !== 'undefined') {
+
+                  return this.fromDb(opt, [row]);
+              }
+
+              return [row];
+          })
+          .then(rows => Array.isArray(rows) ? rows[0] : undefined);
     }
 
     return promise;
@@ -422,7 +450,7 @@ prototype.prototype.update = async function (opt, entity = {}, id, ...args) {
               
               return result.length
           } else {
-              
+
               return result.affectedRows
           }
       })

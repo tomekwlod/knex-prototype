@@ -41,7 +41,7 @@ const clear = async () => {
 
 it(`knex - mysql - findAll`, async done => {
 
-    const data = await man.findAll();
+    const data = await man.findAll({});
 
     const map = data.map(a => {
 
