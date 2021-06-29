@@ -208,7 +208,7 @@ prototype.prototype.query = function (opt, ...args) {
 
     if (!isObject(opt)) {
 
-        throw this.Error(`knex.fetch() error: opt is not an object`);
+        throw this.Error(`knex.query() error: opt is not an object`);
     }
 
     return this.raw(opt, ...args).then(
