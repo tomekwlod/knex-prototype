@@ -473,21 +473,9 @@ knex.init({
             "createRetryIntervalMillis": 100,
         },
         acquireConnectionTimeout: 60000,
-        models: new Proxy({
-            common: knex => extend(knex, prototype, {}),
-        }, {
-            get(target, propKey, receiver) {
-
-                if (typeof target[propKey] !== 'undefined') {
-
-                    return target[propKey];
-                }
-
-                const keys = Object.keys(target);
-
-                throw `No such mysql manager '${propKey}', registered managers are: ` + keys.join(', ');
-            },
-        }),
+        models: {
+          common: knex => extend(knex, prototype, {}),
+        },
     }
 });
 
