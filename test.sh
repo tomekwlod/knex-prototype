@@ -22,10 +22,10 @@ function green {
             yarn
         fi
 
-        if [ ! -e node_modules/.bin/jest ]; then
-
-            yarn add jest --dev
-        fi
+#        if [ ! -e node_modules/.bin/jest ]; then
+#
+#            yarn add jest --dev
+#        fi
 
         if [[ "$(knex-prototype --is-linked)" = "$LOCVER" ]]; then
 
@@ -101,33 +101,35 @@ if [ -f node_modules/.bin/jest ]; then  # exist
 else
 
     { green "node_modules/.bin/jest - doesn't exist"; } 2>&3
+
+    exit 1
 fi
 
-if [ "$JEST" = "" ]; then
-
-    { green "local jest - not found"; } 2>&3
-
-    jest -v > /dev/null
-
-    STAT="$?"
-
-    { green "(jest -v) status: $STAT"; } 2>&3
-
-    if [ "$STAT" = "0" ]; then
-
-        { green "global jest - found"; } 2>&3
-
-        JEST="jest"
-    else
-
-        { red "\n    Can't detect jest, install globally: \n   npm install jest -g\n\n"; } 2>&3
-
-        exit 1;
-    fi
-else
-
-    { green "local jest - found"; } 2>&3
-fi
+#if [ "$JEST" = "" ]; then
+#
+#    { green "local jest - not found"; } 2>&3
+#
+#    jest -v > /dev/null
+#
+#    STAT="$?"
+#
+#    { green "(jest -v) status: $STAT"; } 2>&3
+#
+#    if [ "$STAT" = "0" ]; then
+#
+#        { green "global jest - found"; } 2>&3
+#
+#        JEST="jest"
+#    else
+#
+#        { red "\n    Can't detect jest, install globally: \n   npm install jest -g\n\n"; } 2>&3
+#
+#        exit 1;
+#    fi
+#else
+#
+#    { green "local jest - found"; } 2>&3
+#fi
 
 if [[ "$(ls -la node_modules/knex-prototype | grep knex-prototype)" = *"->"* ]]; then
 

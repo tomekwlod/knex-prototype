@@ -3,6 +3,8 @@ require('dotenv-up')(2, false, 'tests');
 
 const mysql = require('./mysql');
 
+const postgress = require('./postgress');
+
 module.exports = {
     def: 'mysql',
     // sqlite: {
@@ -29,6 +31,17 @@ module.exports = {
         },
         models: mysql,
     },
+    pg: {
+        client: 'postgresql',
+        connection: {
+            host        : process.env.PROTECTED_MYSQL_HOST,
+            port        : process.env.PROTECTED_MYSQL_PORT,
+            user        : process.env.PROTECTED_MYSQL_USER,
+            password    : process.env.PROTECTED_MYSQL_PASS,
+            database    : process.env.PROTECTED_MYSQL_DB,
+        },
+        models: postgress,
+    }
     // test: {
     //     // CREATE DATABASE IF NOT EXISTS `dashboard` /*!40100 DEFAULT CHARACTER SET utf8 */
     //     // GRANT ALL PRIVILEGES ON dashboard.* To 'dashboard'@'%' IDENTIFIED BY 'pass';
