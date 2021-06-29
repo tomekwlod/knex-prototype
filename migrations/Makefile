@@ -11,7 +11,7 @@ diff: # to generate new migration with diff sql based on manual changes of schem
 	@node node_modules/.bin/ts-node node_modules/.bin/typeorm migration:generate --name auto
 
 migrate: # execute all pending migrations
-	@node node_modules/.bin/ts-node node_modules/.bin/typeorm migration:run
+	@node node_modules/.bin/ts-node node_modules/.bin/typeorm migration:run -t=false
 
 sync: # doctrine:schema:update --force - BE CAREFUL IT MIGHT BREAK DATA IN FOREIGN KEY COLLUMNS
 	@printf "This is dangerous command so run it yourself manually"
