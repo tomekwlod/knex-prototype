@@ -7,6 +7,8 @@ require('dotenv-up')(5, true, 'migration-users');
 
 import debug from '../../CI/debug';
 
+const delay = require('nlab/delay');
+
 const log               = require('inspc');
 
 const knex              = require('knex-prototype');
@@ -38,6 +40,12 @@ export class auto1624999697548 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
 
+        console.log('wait 3000 ms')
+
+        await delay(3000);
+        
+        console.log('carry on')
+
         // process.exit(0);
 
         const connection = knex('pg');
@@ -54,6 +62,7 @@ export class auto1624999697548 implements MigrationInterface {
 
                 let count = await model.common.queryColumn({
                     trx,
+                    debug: true,
                 }, `SELECT count(*) c from users where email = ?`, [user.email]);
 
                 count = parseInt(count, 10);
