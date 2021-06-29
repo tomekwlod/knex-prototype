@@ -282,7 +282,7 @@ prototype.prototype.count = function (opt, ...args) {
   ;
 }
 
-prototype.prototype.find = function (opt, select, id, ...args) {
+prototype.prototype.find = function (opt, id, select = '*') {
 
     if (typeof select !== 'string') {
 
@@ -293,7 +293,7 @@ prototype.prototype.find = function (opt, select, id, ...args) {
 
     if (opt.fromDb !== false && opt.both !== false) {
 
-        return promise.then(row => this.fromDb(opt, [row]));
+        return promise.then(row => this.fromDb(opt, [row])).then(rows => rows[0]);
     }
 
     return promise;
