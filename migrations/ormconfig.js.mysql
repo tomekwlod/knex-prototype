@@ -16,7 +16,7 @@ const config = {
    ],
    // "migrationsTableName": "migration_versions",
    "entities": [
-      "src/entity/**/*.ts"
+      "src/entity_mysql/**/*.ts"
    ],
    "migrations": [
       "src/migration_mysql/**/*.ts"
@@ -25,7 +25,7 @@ const config = {
       "src/subscriber/**/*.ts"
    ],
    "cli": {
-      "entitiesDir": "src/entity",
+      "entitiesDir": "src/entity_mysql",
       "migrationsDir": "src/migration_mysql",
       "subscribersDir": "src/subscriber"
    }

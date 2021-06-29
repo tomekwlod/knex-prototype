@@ -17,7 +17,23 @@ const log = require('./log/logn');
 
         connection = await createConnection(config);
 
-        let list = await connection.manager.query(`show tables`);
+        let list;
+
+        switch (config.type) {
+            case 'postgres':
+                list = await connection.manager.query(`SELECT *
+FROM pg_catalog.pg_tables
+WHERE schemaname != 'pg_catalog' AND 
+    schemaname != 'information_schema'`);
+
+                list = list.map(r => ({tablename: r.tablename}))
+                break;
+            case 'mysql':
+                list = await connection.manager.query(`show tables`);
+                break;
+            default:
+                throw new Error(`mcount.js error: unknown type (${config.type})`);
+        }
 
         const migrationsTableName = connection.options.migrationsTableName || 'migrations';
 
@@ -29,7 +45,7 @@ const log = require('./log/logn');
 
         if (found) {
 
-            count = await connection.manager.query(`select count(*) c from ??`, [migrationsTableName]);
+            count = await connection.manager.query(`select count(*) c from ${migrationsTableName}`);
 
             count = Object.values(count[0])[0];
         }

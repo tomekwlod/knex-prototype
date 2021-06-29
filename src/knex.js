@@ -122,9 +122,9 @@ tool.init = c => {
 
         acc[name] = eval('require')('knex')(cc);
 
-        extend(acc[name], name);
-
         acc[name].provider = cc.client;
+
+        extend(acc[name], name);
 
         return acc;
     }, {});

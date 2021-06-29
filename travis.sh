@@ -23,6 +23,12 @@ cp migrations/ormconfig.js.mysql migrations/ormconfig.js
 
 make fixtures
 
+cp migrations/ormconfig.js.pg migrations/ormconfig.js
+
+psql -c 'create database knex;' -U postgres
+
+make mrun
+
 EXECUTE="/bin/bash test.sh"
 
 { green "\n\n    executing tests:\n        $EXECUTE\n\n"; } 2>&3

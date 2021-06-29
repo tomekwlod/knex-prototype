@@ -213,7 +213,8 @@ prototype.prototype.query = function (opt, ...args) {
 
     return this.raw(opt, ...args).then(
       result => {
-          if (this.provider === 'postgresql') {
+
+          if (this.knex.provider === 'postgresql') {
 
               return result.rows;
           }
