@@ -47,11 +47,11 @@ beforeEach(clear);
 
 it(`knex - no transactify`, async done => {
 
-    const id = await manm.transactifytest('title1');
+    const id = await manm.transactifytest({}, 'title1');
 
     expect(id).toEqual(1);
 
-    const list = await manm.findAll();
+    const list = await manm.findAll({});
 
     expect(list).toEqual([
         {
@@ -80,12 +80,12 @@ it(`knex - no transactify`, async done => {
 
     await connection.transaction(async trx => {
 
-        id = await manm.transactifytest(trx, 'title1');
+        id = await manm.transactifytest({trx}, 'title1');
     });
 
     expect(id).toEqual(1);
 
-    const list = await manm.findAll();
+    const list = await manm.findAll({});
 
     expect(list).toEqual([
         {
@@ -112,7 +112,7 @@ it(`knex - transactify - no function given`, async done => {
 
     try {
 
-        await manm.transactify(false, 'test');
+        await manm.transactify({}, 'test');
     }
     catch (e) {
 

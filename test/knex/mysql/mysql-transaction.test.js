@@ -42,7 +42,7 @@ const clear = async () => {
 
     await manc.raw({}, `truncate many`);
 
-    await man.raw(`delete from :table: where password like 'trans%'`);
+    await man.raw({}, `delete from :table: where password like 'trans%'`);
 };
 
 beforeEach(clear);
@@ -51,7 +51,7 @@ afterEach(clear);
 
 it(`knex - no transaction`, async done => {
 
-    await man.insert({
+    await man.insert({}, {
         firstName: 'trans f a',
         lastName: 'trans l a',
         email:   'transa@gmail.com',
@@ -60,7 +60,7 @@ it(`knex - no transaction`, async done => {
 
     try {
 
-        await man.insert({
+        await man.insert({}, {
             firstName__k: 'trans f b',
             lastName: 'trans l b',
             email:   'transb@gmail.com',
@@ -71,7 +71,7 @@ it(`knex - no transaction`, async done => {
 
         expect(String(e)).toContain('Unknown column');
 
-        const count = await man.queryColumn(`select count(*) c from :table: where password in (?)`, [['transa', 'transb']]);
+        const count = await man.queryColumn({}, `select count(*) c from :table: where password in (?)`, [['transa', 'transb']]);
 
         expect(count).toBe(1);
 
@@ -84,14 +84,14 @@ it(`knex - transaction ON`, async done => {
     try {
 
         await connection.transaction(async trx => {
-            await man.insert(trx, {
+            await man.insert({trx}, {
                 firstName: 'trans f a',
                 lastName: 'trans l a',
                 email:   'transa@gmail.com',
                 password: 'transa'
             });
 
-            await man.insert(trx, {
+            await man.insert({trx}, {
                 firstName__k: 'trans f b',
                 lastName: 'trans l b',
                 email:   'transb@gmail.com',
@@ -103,7 +103,7 @@ it(`knex - transaction ON`, async done => {
 
         expect(String(e)).toContain('Unknown column');
 
-        const count = await man.queryColumn(`select count(*) c from :table: where password in (?)`, [['transa', 'transb']]);
+        const count = await man.queryColumn({},`select count(*) c from :table: where password in (?)`, [['transa', 'transb']]);
 
         expect(count).toBe(0);
 

@@ -62,7 +62,9 @@ select r.id from roles r where r.name = ?
 
                     opt.created = true,
 
-                      await abstract().model.users.insert(trx, {
+                      await abstract().model.users.insert({
+                          trx: opt.trx,
+                      }, {
                           firstName: opt.test1,
                           lastName: 'test',
                           password: 'psw',

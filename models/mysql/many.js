@@ -8,39 +8,33 @@ const prototype         = abstract.prototype_mysql;
 const log               = require('inspc');
 
 module.exports = knex => extend(knex, prototype, {
-    transactifytest: async function (...args) {
+    transactifytest: async function (opt, title) {
 
-        let [debug, trx, title] = a(args);
-
-        const id = await this.insert(debug, trx, {
+        const id = await this.insert(opt, {
             title,
         });
 
-        await this.transactifytest2(debug, trx, title + '_l1');
+        await this.transactifytest2(opt, title + '_l1');
 
         return id;
     },
-    transactifytest2: async function (...args) {
+    transactifytest2: async function (opt, title) {
 
-        let [debug, trx, title] = a(args);
-
-        const id = await this.insert(debug, trx, {
+        const id = await this.insert(opt, {
             title,
         });
 
-        await this.transactifytest3(debug, trx, title + '_l2');
+        await this.transactifytest3(opt, title + '_l2');
 
         return id;
     },
-    transactifytest3: async function (...args) {
-
-        let [debug, trx, title] = a(args);
+    transactifytest3: async function (opt, title) {
 
         let id;
 
-        await this.transactify(trx, async trx => {
+        await this.transactify(opt.trx, async trx => {
 
-            id = await this.insert(debug, trx, {
+            id = await this.insert(opt, {
                 title,
             });
         });

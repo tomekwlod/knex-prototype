@@ -309,11 +309,12 @@ prototype.prototype.find = function (opt, id, select = '*') {
     }
 
     let promise = this.queryOne(opt, `SELECT ${select} FROM :table: WHERE :id: = :id`, { id: id });
-
+    
     if (opt.fromDb !== false && opt.both !== false) {
 
         return promise
           .then(row => {
+              
               if (typeof row !== 'undefined') {
 
                   return this.fromDb(opt, [row]);
