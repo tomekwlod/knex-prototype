@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/tomekwlod/knex-prototype.svg?branch=v0.0.18)](https://travis-ci.com/tomekwlod/knex-prototype)
+[![Build Status](https://travis-ci.com/tomekwlod/knex-prototype.svg?branch=v0.0.19)](https://travis-ci.com/tomekwlod/knex-prototype)
 [![npm version](https://badge.fury.io/js/knex-prototype.svg)](https://badge.fury.io/js/knex-prototype)
-[![codecov](https://codecov.io/gh/tomekwlod/knex-prototype/branch/v0.0.18/graph/badge.svg)](https://codecov.io/gh/tomekwlod/knex-prototype/tree/v0.0.18)
+[![codecov](https://codecov.io/gh/tomekwlod/knex-prototype/branch/v0.0.19/graph/badge.svg)](https://codecov.io/gh/tomekwlod/knex-prototype/tree/v0.0.19)
 [![NpmLicense](https://img.shields.io/npm/l/knex-prototype.svg)](https://github.com/knex-prototype/blob/master/LICENSE)
 
 
