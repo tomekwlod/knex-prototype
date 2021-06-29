@@ -8,11 +8,14 @@ const prototype         = abstract.prototype_mysql;
 const log               = require('inspc');
 
 module.exports = knex => extend(knex, prototype, {
-    fromDb: async function (row, opt, trx) {
+    fromDb: async function (opt, rows) {
 
         if (opt.opt) {
 
-            row.fromDb = true;
+            return rows.map(r => {
+                r.fromDb = true;
+                return r;
+            })
         }
 
         return null;

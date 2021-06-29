@@ -244,6 +244,15 @@ prototype.prototype.fetch = function (opt, ...args) {
             }
 
             return rows;
+        })
+        .then(rows => {
+
+            if ( ! Array.isArray(rows) ) {
+
+              throw this.Error(`fetch error: rows is not an array`);
+            }
+
+            return rows;
         });
     }
 
@@ -257,7 +266,7 @@ prototype.prototype.queryOne = function (opt, ...args) {
 
           if (rows.length < 2) {
 
-              return rows.pop(); // return first row from result - but only if there is only one
+              return rows[0]; // return first row from result - but only if there is only one
           }
 
           return Promise.reject('found ' + rows.length + ' rows, queryOne is designed to fetch first from only one row');
@@ -276,7 +285,15 @@ prototype.prototype.queryOne = function (opt, ...args) {
 
               return [row];
           })
-          .then(rows => Array.isArray(rows) ? rows[0] : undefined)
+          .then(rows => {
+
+              if ( ! Array.isArray(rows) ) {
+
+                  throw this.Error(`queryOne error: rows is not an array`);
+              }
+
+              return rows[0];
+          })
         ;
     }
 
@@ -292,7 +309,7 @@ prototype.prototype.queryColumn = function (opt, ...args) {
               return Object.values(row)[0]; // extract value from first column
           }
       })
-      ;
+   ;
 };
 
 prototype.prototype.count = function (opt, ...args) {
@@ -322,7 +339,16 @@ prototype.prototype.find = function (opt, id, select = '*') {
 
               return [row];
           })
-          .then(rows => Array.isArray(rows) ? rows[0] : undefined);
+          .then(rows => {
+
+              if ( ! Array.isArray(rows) ) {
+
+                  throw this.Error(`find error: rows is not an array`);
+              }
+
+              return rows[0];
+          })
+        ;
     }
 
     return promise;

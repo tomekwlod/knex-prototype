@@ -85,13 +85,20 @@ it(`knex - mysql - exc semi`, async done => {
 
 it(`knex - mysql - wrong fromDb`, async done => {
 
-    const data = await knex().model.wrongTest.queryColumn({}, 'select email from :table: u where lastName = :p1', {
-        p1: 'admin'
-    });
+    try {
 
-    expect(data).toBeUndefined();
+        await knex().model.wrongTest.queryColumn({}, 'select email from :table: u where lastName = :p1', {
+            p1: 'admin'
+        });
 
-    done();
+        done('wrong');
+    }
+    catch (e) {
+
+        expect(String(e)).toEqual("Error: users.js error: queryOne error: rows is not an array");
+
+        done();
+    }
 });
 
 it(`knex - mysql - exc not semi`, async done => {

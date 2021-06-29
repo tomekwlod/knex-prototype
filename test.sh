@@ -141,12 +141,13 @@ fi
 
 # --bail \
 # --detectOpenHandles \
+# --silent=false \
+# --verbose false \
 
 TEST="$(cat <<END
 $JEST \
 $@ \
 --roots test \
---verbose \
 --runInBand \
 --modulePathIgnorePatterns test/examples test/jest test/minefield test/project test/puppeteer karma_build
 END

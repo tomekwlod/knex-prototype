@@ -75,7 +75,9 @@ select r.id from roles r where r.name = ?
 
                 row.extraFromDb = true;
 
-                return row;
+                tmp.push(row);
+
+                return tmp;
             }
 
             if (typeof row.roles === 'string') {
