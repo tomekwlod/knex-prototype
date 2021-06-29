@@ -282,42 +282,37 @@ prototype.prototype.count = function (opt, ...args) {
   ;
 }
 
-prototype.prototype.find = function (opt, id, select = '*') {
+prototype.prototype.find = function (opt, select, id, ...args) {
 
     if (typeof select !== 'string') {
 
         throw this.Error('second argument of find method should be string');
     }
 
-    let promise = this.queryOne(opt, `SELECT ${select} FROM :table: WHERE :id: = :id`, {
-        id,
-    });
+    let promise = this.queryOne(opt, `SELECT ${select} FROM :table: WHERE :id: = :id`, { id: id });
 
-    if ( opt.fromDb !== false && opt.both !== false ) {
+    if (opt.fromDb !== false && opt.both !== false) {
 
-        return promise.then(row => this.fromDb(opt, [row])).then(rows => rows[0]);
+        return promise.then(row => this.fromDb(opt, [row]));
     }
 
     return promise;
 };
 
-prototype.prototype.findAll = function (...args) {
+prototype.prototype.findAll = function (opt, ...args) {
 
-    let [opt, trx] = a(args);
-
-    return this.fetch(opt, trx, `select * from :table: order by :id:`);
+    return this.fetch(opt, `select * from :table: order by :id:`, ...args);
 }
 /**
  * @param entity - object
  * @returns integer - inserted id
  */
-prototype.prototype.insert = async function (...args) {
+prototype.prototype.insert = async function (opt, entity = {}) {
 
-    let [opt, trx, entity] = a(args);
 
-    if ( opt.toDb !== false && opt.both !== false ) {
+    if (opt.toDb !== false && opt.both !== false) {
 
-        entity = await this.toDb(entity, opt, trx);
+        entity = await this.toDb(opt, entity);
     }
 
     var query = 'INSERT INTO :table: ';
@@ -328,7 +323,7 @@ prototype.prototype.insert = async function (...args) {
 
         if (entity.hasOwnProperty(i)) {
 
-            columns.push('`' + i + '`');
+            columns.push(this.escaper + i + this.escaper);
 
             marks.push('?');
 
@@ -338,32 +333,46 @@ prototype.prototype.insert = async function (...args) {
 
     query += '(' + columns.join(', ') + ') values (' + marks.join(', ') + ')';
 
-    return this.query(opt, trx, query, values)
-        .then(result => result.insertId)
-    ;
+    // POSTGRES ONLY!!
+    if (this.knex.provider === 'postgresql') {
+        query += " RETURNING :id:"
+    }
+
+    return this.query(opt, query, values)
+      .then(result => {
+          if (this.knex.provider === 'postgresql') {
+
+              /**
+               * Check later
+               * not sure if result will be an array
+               */
+
+              return result[0].id
+          } else {
+              return result.insertId
+          }
+      });
 }
 
 /**
  * @param entity - object
  * @param id - mixed | object
  */
-prototype.prototype.update = async function (...args) {
+prototype.prototype.update = async function (opt, entity = {}, id, ...args) {
 
-    let [opt, trx, entity, id] = a(args);
+    if (opt.toDb !== false && opt.both !== false) {
 
-    if ( opt.toDb !== false && opt.both !== false ) {
-
-        entity = await this.toDb(entity, opt, trx);
+        entity = await this.toDb(opt, entity);
     }
 
-    if ( ! id ) {
+    if (!id) {
 
         id = false;
     }
 
     if (id && !isObject(id)) {
 
-        id = {[this.__id]: id};
+        id = { [this.__id]: id };
     }
 
     var query = 'UPDATE :table: SET ';
@@ -374,7 +383,7 @@ prototype.prototype.update = async function (...args) {
 
         if (entity.hasOwnProperty(i)) {
 
-            columns.push('`' + i + '` = ?');
+            columns.push(this.escaper + i + this.escaper + ' = ?');
 
             values.push(entity[i]);
         }
@@ -388,7 +397,7 @@ prototype.prototype.update = async function (...args) {
 
             if (id.hasOwnProperty(i)) {
 
-                ids.push('`' + i + '` = ?');
+                ids.push('"' + i + '" = ?');
 
                 values.push(id[i]);
             }
@@ -402,14 +411,25 @@ prototype.prototype.update = async function (...args) {
         query += ' WHERE ' + ids.join(' AND ');
     }
 
-    return this.query(opt, trx, query, values)
-        .then(result => result.affectedRows)
-    ;
+    // POSTGRES ONLY!!
+    if (this.knex.provider === 'postgresql') {
+        query += " RETURNING :id:"
+    }
+
+    return this.query(opt, query, values)
+      .then(result => {
+          if (this.knex.provider === 'postgresql') {
+              
+              return result.length
+          } else {
+
+              return result.affectedRows
+          }
+      })
+      ;
 }
 
-prototype.prototype.delete = function (...args) {
-
-    let [opt, trx, id] = a(args);
+prototype.prototype.delete = function (opt, id, ...args) {
 
     let where = ' ';
 
@@ -422,11 +442,23 @@ prototype.prototype.delete = function (...args) {
         where += ':id: = :id';
     }
 
-    return this.query(opt, trx, `delete from :table: where ` + where, {
+    let query = `delete from :table: where ` + where;
+
+    // POSTGRES ONLY!!
+    if (this.knex.provider === 'postgresql') {
+        query += " RETURNING :id:"
+    }
+
+    return this.query(opt, query, {
         id,
     })
-        .then(result => result.affectedRows)
-    ;
+      .then(result => {
+          if (this.knex.provider === 'postgresql') {
+              return result.length
+          } else {
+              return result.affectedRows
+          }
+      });
 }
 
 prototype.prototype.destroy = function () {
@@ -455,7 +487,7 @@ prototype.prototype.transactify = async function (...args) {
 
     if ( typeof logic !== 'function') {
 
-        throw this.th(`transactify: logic is not a function`);
+        throw this.Error(`transactify: logic is not a function`);
     }
 
     if (trx) {

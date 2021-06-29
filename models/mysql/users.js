@@ -108,7 +108,7 @@ select r.id from roles r where r.name = ?
 
         return tmp;
     },
-    toDb: async function (row, opt, trx) {
+    toDb: async function (opt, row) {
 
         if ( ! isObject(row) ) {
 
@@ -147,20 +147,17 @@ select r.id from roles r where r.name = ?
 
         return row;
     },
-    update: function (...args) {
-
-        let [debug, trx, entity, id] = a(args);
+    update: function (opt, entity, id) {
 
         if (Array.isArray(entity.roles)) {
 
-            this.updateRoles(id, entity.roles)
+            this.updateRoles(opt, id, entity.roles)
         }
 
-        return prototype.prototype.update.call(this, debug, trx, entity, id);
+        return prototype.prototype.update.call(this, opt, entity, id);
     },
-    insert: async function (...args) {
+    insert: async function (opt, entity) {
 
-        let [opt, trx, entity] = a(args);
 
         let roles = null;
 
@@ -169,13 +166,13 @@ select r.id from roles r where r.name = ?
             roles = entity.roles;
         }
 
-        entity = await this.toDb(Object.assign({}, entity), opt, trx);
+        entity = await this.toDb(opt, Object.assign({}, entity));
 
-        const id = await prototype.prototype.insert.call(this, opt, trx, entity);
+        const id = await prototype.prototype.insert.call(this, opt, entity);
 
         if (roles) {
 
-            await this.updateRoles(id, roles);
+            await this.updateRoles(opt, id, roles);
         }
 
         return id;
@@ -186,67 +183,23 @@ select r.id from roles r where r.name = ?
 
         return await prototype.prototype.delete.call(this, id, ...args);
     },
-    updateRoles: async function (userId, rolesIds) {
+    updateRoles: async function (opt, userId, rolesIds) {
 
         await this.clearRoles(userId);
 
         if (Array.isArray(rolesIds)) {
 
             return await Promise.all(rolesIds.map(async role_id => {
-                return await knex.model.user_role.insert({
+                return await knex.model.user_role.insert(opt, {
                     user_id: userId,
                     role_id,
                 })
             }));
         }
     },
-    clearRoles: async function(userId) {
-        return await this.query(`delete from user_role where user_id = :id`, userId);
+    clearRoles: async function(opt, userId) {
+        return await this.query(opt, `delete from user_role where user_id = :id`, userId);
     },
-//     find: function (...args) {
-//
-//         let [opt, trx, id] = a(args);
-//
-//         if ( ! id ) {
-//
-//             throw `user.js::find(): id not specified or invalid`;
-//         }
-//
-//         const data = this.raw(opt, trx, `
-// SELECT          u.*, GROUP_CONCAT(r.id) roles
-// FROM            users u
-// LEFT JOIN       user_role ur
-// 		     ON ur.user_id = u.id
-// LEFT JOIN       roles r
-// 		     ON ur.role_id = r.id
-// WHERE           u.id = ?
-// GROUP BY        u.id
-// ORDER BY        id desc
-//         `, [id]).then(data => {
-//             return data[0][0];
-//         }).then(d => this.fromDb(d, opt, trx));
-//
-//         return data;
-//     },
-//     findAll: function (...args) {
-//
-//         let [opt, trx] = a(args);
-//
-//         const data = this.raw(opt, trx, `
-// SELECT          u.*, GROUP_CONCAT(r.name) roles
-// FROM            users u
-// LEFT JOIN       user_role ur
-// 		     ON ur.user_id = u.id
-// LEFT JOIN       roles r
-// 		     ON ur.role_id = r.id
-// GROUP BY        u.id
-// ORDER BY        id desc
-//         `).then(data => {
-//             return data[0];
-//         }).then(list => list.map(d => this.fromDb(d, opt, trx)));
-//
-//         return data;
-//     },
     prepareToValidate: function (data = {}, mode) {
 
         if (typeof data.id !== 'undefined') {
