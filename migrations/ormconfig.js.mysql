@@ -19,14 +19,14 @@ const config = {
       "src/entity/**/*.ts"
    ],
    "migrations": [
-      "src/migration/**/*.ts"
+      "src/migration_mysql/**/*.ts"
    ],
    "subscribers": [
       "src/subscriber/**/*.ts"
    ],
    "cli": {
       "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
+      "migrationsDir": "src/migration_mysql",
       "subscribersDir": "src/subscriber"
    }
 }

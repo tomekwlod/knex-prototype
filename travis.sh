@@ -19,7 +19,7 @@ npm link knex-prototype
 
 cp .env.travis .env
 
-cp migrations/ormconfig.js.dist migrations/ormconfig.js
+cp migrations/ormconfig.js.mysql migrations/ormconfig.js
 
 make fixtures
 

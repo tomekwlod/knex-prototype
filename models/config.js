@@ -34,11 +34,11 @@ module.exports = {
     pg: {
         client: 'postgresql',
         connection: {
-            host        : process.env.PROTECTED_MYSQL_HOST,
-            port        : process.env.PROTECTED_MYSQL_PORT,
-            user        : process.env.PROTECTED_MYSQL_USER,
-            password    : process.env.PROTECTED_MYSQL_PASS,
-            database    : process.env.PROTECTED_MYSQL_DB,
+            host        : process.env.PROTECTED_PG_HOST,
+            port        : process.env.PROTECTED_PG_PORT,
+            user        : process.env.PROTECTED_PG_USER,
+            password    : process.env.PROTECTED_PG_PASS,
+            database    : process.env.PROTECTED_PG_DB,
         },
         models: postgress,
     }

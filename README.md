@@ -514,7 +514,7 @@ make doc
 sleep 10 # give little time for mysql docker to start
 make ct
 cp .env.dist .env
-cp migrations/ormconfig.js.dist migrations/ormconfig.js
+cp migrations/ormconfig.js.mysql migrations/ormconfig.js
 yarn
 npm install --global nodemon
 make link

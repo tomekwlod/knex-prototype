@@ -12,7 +12,7 @@ set -x
 
 if [ ! -e ../ormconfig.js ]; then
 
-    { red "ormconfig.js doesn't exist, use template file ormconfig.js.dist"; } 2>&3
+    { red "ormconfig.js doesn't exist, use template file ormconfig.js.mysql"; } 2>&3
 
     exit 1;
 fi
