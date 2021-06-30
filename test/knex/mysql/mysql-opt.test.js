@@ -49,8 +49,9 @@ const clear = async () => {
 
 beforeEach(clear);
 
-it(`knex - mysql - opt`, async done => {
+it(`knex - mysql - opt`, done => {
 
+(async function () {
     await man.transactify(async trx => {
 
         const opt = {
@@ -85,10 +86,12 @@ it(`knex - mysql - opt`, async done => {
     });
 
     done();
+    }())
 });
 
-it(`knex - mysql - opt - beyond`, async done => {
+it(`knex - mysql - opt - beyond`, done => {
 
+(async function () {
     await man.transactify(async trx => {
 
         const opt = {
@@ -130,10 +133,12 @@ it(`knex - mysql - opt - beyond`, async done => {
     expect(count).toEqual(2);
 
     done();
+    }())
 });
 
-it(`knex - mysql - opt - beyond with trans error`, async done => {
+it(`knex - mysql - opt - beyond with trans error`, done => {
 
+(async function () {
     try {
 
         await man.transactify(async trx => {
@@ -184,5 +189,6 @@ it(`knex - mysql - opt - beyond with trans error`, async done => {
     expect(count).toEqual(0);
 
     done();
+    }())
 });
 

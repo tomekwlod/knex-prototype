@@ -39,8 +39,9 @@ const clear = async () => {
     await manc.raw({}, `truncate many`);
 };
 
-it(`knex - mysql - find`, async done => {
+it(`knex - mysql - find`, done => {
 
+(async function () {
     const {created, updated, roles, config, password, ...rest} = await man.find({}, 1);
 
     expect(rest).toEqual({
@@ -53,10 +54,12 @@ it(`knex - mysql - find`, async done => {
     });
 
     done();
+    }())
 });
 
-it(`knex - mysql - find with custom select`, async done => {
+it(`knex - mysql - find with custom select`, done => {
 
+(async function () {
     const data = await man.find({}, 1, 'lastName, firstName');
 
     expect(data).toEqual({
@@ -66,6 +69,8 @@ it(`knex - mysql - find with custom select`, async done => {
     });
 
     done();
+
+    }())
 });
 
 

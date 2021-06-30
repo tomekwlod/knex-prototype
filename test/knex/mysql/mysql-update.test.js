@@ -1,14 +1,14 @@
 'use strict';
 
-const log               = require('inspc');
+const log = require('inspc');
 
-const knex              = require('knex-prototype');
+const knex = require('knex-prototype');
 
 const delay = require('nlab/delay');
 
 require('dotenv-up')(4, false, 'tests');
 
-const config            = require('../../../models/config');
+const config = require('../../../models/config');
 
 knex.init(config);
 
@@ -20,48 +20,50 @@ let manm;
 
 beforeAll(async () => {
 
-    manc    = knex().model.common;
+  manc = knex().model.common;
 
-    man     = knex().model.users;
+  man = knex().model.users;
 
-    manm    = knex().model.many;
+  manm = knex().model.many;
 
-    await clear();
+  await clear();
 });
 
 afterAll(async () => {
 
-    await clear();
+  await clear();
 
-    await man.destroy();
+  await man.destroy();
 });
 
 const clear = async () => {
 
-    await manc.raw({}, `truncate many`);
+  await manc.raw({}, `truncate many`);
 };
 
 beforeEach(clear);
 
-it(`knex - mysql - update`, async done => {
+it(`knex - mysql - update`, done => {
 
+  (async function () {
     await manm.insert({}, {
-        title: 'test'
+      title: 'test'
     });
 
     const affectedRows = await manm.update({}, {
-        title: 'test2'
+      title: 'test2'
     }, {
-        title: 'test'
+      title: 'test'
     });
 
     expect(affectedRows).toEqual(1);
 
     const all = await manm.findAll({});
 
-    expect(all).toEqual([{"id": 1, "title": "test2", "user_id": null}]);
+    expect(all).toEqual([{ "id": 1, "title": "test2", "user_id": null }]);
 
     done();
+  }())
 });
 
 // it(`knex - mysql - update, id`, async done => {

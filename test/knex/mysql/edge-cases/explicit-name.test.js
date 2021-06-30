@@ -1,17 +1,18 @@
 'use strict';
 
-const log               = require('inspc');
+const log = require('inspc');
 
-const knex              = require('knex-prototype');
+const knex = require('knex-prototype');
 
 require('dotenv-up')(5, false, 'tests');
 
-const config            = require('../../../../models/config');
+const config = require('../../../../models/config');
 
 knex.init(config);
 
-it('knex - explicit name', async done => {
+it('knex - explicit name', done => {
 
+  (async function () {
     const man = knex('mysql').model.common;
 
     const list = await man.query({}, `show databases`);
@@ -25,4 +26,5 @@ it('knex - explicit name', async done => {
     expect(tmp).toEqual(db);
 
     done();
+  }())
 });
