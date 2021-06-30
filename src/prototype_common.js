@@ -241,7 +241,17 @@ prototype.prototype.fetch = function (opt, ...args) {
 
             if (Array.isArray(rows)) {
 
-                return this.fromDb(opt, rows)
+                return (() => {
+
+                    try {
+
+                        return Promise.resolve(this.fromDb(opt, rows))
+                    }
+                    catch (e) {
+
+                        return Promise.reject(e);
+                    }
+                })()
                     
                     .then(rows => {
 
@@ -291,7 +301,18 @@ prototype.prototype.queryOne = function (opt, ...args) {
 
               if (typeof row !== 'undefined') {
 
-                  return this.fromDb(opt, [row])
+                return (() => {
+
+                    try {
+
+                        return Promise.resolve(this.fromDb(opt, [row]))
+                    }
+                    catch (e) {
+
+                        return Promise.reject(e);
+                    }
+                })()
+                    
                     .then(rows => {
 
                         if ( ! Array.isArray(rows) ) {
@@ -300,7 +321,7 @@ prototype.prototype.queryOne = function (opt, ...args) {
                         }
 
                         return rows;
-                    });
+                    })
               }
 
               return [row];
@@ -354,15 +375,27 @@ prototype.prototype.find = function (opt, id, select = '*') {
               
               if (typeof row !== 'undefined') {
 
-                return this.fromDb(opt, [row]).then(rows => {
+                return (() => {
 
-                    if ( ! Array.isArray(rows) ) {
+                    try {
 
-                        throw this.Error(`find: rows is not an array`);
+                        return Promise.resolve(this.fromDb(opt, [row]))
                     }
+                    catch (e) {
 
-                    return rows;
-                });
+                        return Promise.reject(e);
+                    }
+                })()
+                    
+                    .then(rows => {
+
+                        if ( ! Array.isArray(rows) ) {
+
+                            throw this.Error(`find: rows is not an array`);
+                        }
+
+                        return rows;
+                    })
               }
 
               return [row];

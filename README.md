@@ -537,3 +537,10 @@ http://localhost:8080/
 
 ```
 
+
+
+Changing the package:
+- before you commit the changes be sure you run `make cp` before (to bring proper package.json files)
+- commit the changes but do not push them to git!!
+- `make u` (this will push and publish the changes to npm/git)
+- if you pushed accidentially then run `make uf` (force mode)

@@ -95,7 +95,7 @@ it(`knex - mysql - wrong fromDb`, async done => {
     }
     catch (e) {
 
-        expect(String(e)).toEqual("Error: users.js error: queryOne error: rows is not an array");
+        expect(String(e)).toEqual("Error: users.js error: queryOne: rows is not an array");
 
         done();
     }
