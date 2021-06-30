@@ -512,13 +512,21 @@ git clone https://github.com/tomekwlod/knex-prototype.git
 cd knex-prototype
 make doc
 sleep 10 # give little time for mysql docker to start
+# this exchanges the package.json with the package_prod
 make ct
 cp .env.dist .env
-cp migrations/ormconfig.js.mysql migrations/ormconfig.js
-yarn
 npm install --global nodemon
+yarn
 make link
+
+cp migrations/ormconfig.js.mysql migrations/ormconfig.js
+# node recreate-db.js [dangerous] # this will recreate empty db in mysql only
 make fixtures
+
+cp migrations/ormconfig.js.pg migrations/ormconfig.js
+# psql -c 'create database knex;' -U postgres # if needed only
+make mrun
+
 make manual
 
 # then if you run

@@ -80,8 +80,10 @@ if [ "$1" = "--help" ]; then
 cat << EOF
 
     /bin/bash $0 --help
-    /bin/bash $0 --watchAll
-    /bin/bash $0 -t 'filter test'
+    /bin/bash $0 --watch                        ## this will run only changed test
+    /bin/bash $0 --watchAll                     ## this will run all test on every change
+    /bin/bash $0 [--watch|--watchAll] test/...  ## will run one test file or dir with tests 
+    /bin/bash $0 -t 'filter test'               ## this will run only tests matching the provided string
 
 EOF
 
