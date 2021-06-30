@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/tomekwlod/knex-prototype.svg?branch=v0.0.20)](https://travis-ci.com/tomekwlod/knex-prototype)
+[![Build Status](https://travis-ci.com/tomekwlod/knex-prototype.svg?branch=v0.0.22)](https://travis-ci.com/tomekwlod/knex-prototype)
 [![npm version](https://badge.fury.io/js/knex-prototype.svg)](https://badge.fury.io/js/knex-prototype)
-[![codecov](https://codecov.io/gh/tomekwlod/knex-prototype/branch/v0.0.20/graph/badge.svg)](https://codecov.io/gh/tomekwlod/knex-prototype/tree/v0.0.20)
+[![codecov](https://codecov.io/gh/tomekwlod/knex-prototype/branch/v0.0.22/graph/badge.svg)](https://codecov.io/gh/tomekwlod/knex-prototype/tree/v0.0.22)
 [![NpmLicense](https://img.shields.io/npm/l/knex-prototype.svg)](https://github.com/knex-prototype/blob/master/LICENSE)
 
 
@@ -512,13 +512,21 @@ git clone https://github.com/tomekwlod/knex-prototype.git
 cd knex-prototype
 make doc
 sleep 10 # give little time for mysql docker to start
+# this exchanges the package.json with the package_prod
 make ct
 cp .env.dist .env
-cp migrations/ormconfig.js.mysql migrations/ormconfig.js
-yarn
 npm install --global nodemon
+yarn
 make link
+
+cp migrations/ormconfig.js.mysql migrations/ormconfig.js
+# node recreate-db.js [dangerous] # this will recreate empty db in mysql only
 make fixtures
+
+cp migrations/ormconfig.js.pg migrations/ormconfig.js
+# psql -c 'create database knex;' -U postgres # if needed only
+make mrun
+
 make manual
 
 # then if you run
@@ -529,3 +537,10 @@ http://localhost:8080/
 
 ```
 
+
+
+Changing the package:
+- before you commit the changes be sure you run `make cp` before (to bring proper package.json files)
+- commit the changes but do not push them to git!!
+- `make u` (this will push and publish the changes to npm/git)
+- if you pushed accidentially then run `make uf` (force mode)

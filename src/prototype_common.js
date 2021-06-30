@@ -241,7 +241,27 @@ prototype.prototype.fetch = function (opt, ...args) {
 
             if (Array.isArray(rows)) {
 
-                return this.fromDb(opt, rows);
+                return (() => {
+
+                    try {
+
+                        return Promise.resolve(this.fromDb(opt, rows))
+                    }
+                    catch (e) {
+
+                        return Promise.reject(e);
+                    }
+                })()
+                    
+                    .then(rows => {
+
+                        if ( ! Array.isArray(rows) ) {
+
+                            throw this.Error(`fetch: rows is not an array`);
+                        }
+
+                        return rows;
+                    })
             }
 
             return rows;
@@ -250,7 +270,7 @@ prototype.prototype.fetch = function (opt, ...args) {
 
             if ( ! Array.isArray(rows) ) {
 
-              throw this.Error(`fetch error: rows is not an array`);
+              throw this.Error(`fetch: rows is not an array`);
             }
 
             return rows;
@@ -281,7 +301,27 @@ prototype.prototype.queryOne = function (opt, ...args) {
 
               if (typeof row !== 'undefined') {
 
-                  return this.fromDb(opt, [row]);
+                return (() => {
+
+                    try {
+
+                        return Promise.resolve(this.fromDb(opt, [row]))
+                    }
+                    catch (e) {
+
+                        return Promise.reject(e);
+                    }
+                })()
+                    
+                    .then(rows => {
+
+                        if ( ! Array.isArray(rows) ) {
+
+                            throw this.Error(`queryOne: rows is not an array`);
+                        }
+
+                        return rows;
+                    })
               }
 
               return [row];
@@ -335,7 +375,27 @@ prototype.prototype.find = function (opt, id, select = '*') {
               
               if (typeof row !== 'undefined') {
 
-                  return this.fromDb(opt, [row]);
+                return (() => {
+
+                    try {
+
+                        return Promise.resolve(this.fromDb(opt, [row]))
+                    }
+                    catch (e) {
+
+                        return Promise.reject(e);
+                    }
+                })()
+                    
+                    .then(rows => {
+
+                        if ( ! Array.isArray(rows) ) {
+
+                            throw this.Error(`find: rows is not an array`);
+                        }
+
+                        return rows;
+                    })
               }
 
               return [row];
