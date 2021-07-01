@@ -147,6 +147,7 @@ fi
 # --detectOpenHandles \
 # --silent=false \
 # --verbose false \
+# --detectOpenHandles \
 
 TEST="$(cat <<END
 $JEST \

@@ -1,6 +1,4 @@
 
-const path              = require('path');
-
 const abstract          = require('knex-prototype');
 
 const extend            = abstract.extend;
@@ -62,7 +60,7 @@ select r.id from roles r where r.name = ?
 
                     opt.created = true,
 
-                      await abstract().model.users.insert({
+                      await abstract('pg').model.users.insert({
                           trx: opt.trx,
                       }, {
                           firstName: opt.test1,

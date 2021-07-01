@@ -94,7 +94,7 @@ it(`knex - postgres - wrong fromDb`, done => {
   (async function () {
     try {
 
-      await knex().model.wrongTest.queryColumn({}, 'select email from :table: u where lastName = :p1', {
+      await knex('pg').model.wrongTest.queryColumn({}, 'select email from :table: u where "lastName" = :p1', {
         p1: 'admin'
       });
 

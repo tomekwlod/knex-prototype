@@ -54,7 +54,7 @@ it('knex - wrong manager', done => {
 it('knex - postgres', done => {
 
   (async function () {
-    const list = await man.query({}, 'SELECT datname FROM pg_database WHERE datistemplate = false;');
+    const list = await man.query({}, 'SELECT datname FROM pg_database WHERE datistemplate = false');
 
     let tmp = list.map(x => Object.values(x)[0]);
 
