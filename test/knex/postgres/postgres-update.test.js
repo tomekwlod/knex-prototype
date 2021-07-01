@@ -20,11 +20,11 @@ let manm;
 
 beforeAll(async () => {
 
-  manc = knex().model.common;
+  manc = knex('pg').model.common;
 
-  man = knex().model.users;
+  man = knex('pg').model.users;
 
-  manm = knex().model.many;
+  manm = knex('pg').model.many;
 
   await clear();
 });
@@ -38,12 +38,12 @@ afterAll(async () => {
 
 const clear = async () => {
 
-  await manc.raw({}, `truncate many`);
+  await manc.raw({}, `TRUNCATE TABLE many RESTART IDENTITY`);
 };
 
 beforeEach(clear);
 
-it(`knex - mysql - update`, done => {
+it(`knex - postgres - update`, done => {
 
   (async function () {
     await manm.insert({}, {
@@ -66,7 +66,7 @@ it(`knex - mysql - update`, done => {
   }())
 });
 
-// it(`knex - mysql - update, id`, async done => {
+// it(`knex - postgres - update, id`, async done => {
 //
 //     await manm.insert({}, {
 //         title: 'test'
@@ -86,7 +86,7 @@ it(`knex - mysql - update`, done => {
 // });
 //
 //
-// it(`knex - mysql - update, hasOwnProperty`, async done => {
+// it(`knex - postgres - update, hasOwnProperty`, async done => {
 //
 //     await manm.insert({}, {
 //         title: 'test'
@@ -115,7 +115,7 @@ it(`knex - mysql - update`, done => {
 // });
 //
 //
-// it(`knex - mysql - update, hasOwnProperty in id`, async done => {
+// it(`knex - postgres - update, hasOwnProperty in id`, async done => {
 //
 //     await manm.insert({}, {
 //         title: 'test'
@@ -144,7 +144,7 @@ it(`knex - mysql - update`, done => {
 //     done();
 // });
 //
-// it(`knex - mysql - update, many at once`, async done => {
+// it(`knex - postgres - update, many at once`, async done => {
 //
 //     await manm.insert({}, {title: 'test1'});
 //

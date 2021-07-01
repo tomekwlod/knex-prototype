@@ -26,8 +26,9 @@ afterAll(() => {
     man.destroy();
 });
 
-it('knex - mysql ec - no query', async done => {
+it('knex - mysql ec - no query', done => {
 
+(async function () {
     try {
 
         await man.query({});
@@ -38,10 +39,12 @@ it('knex - mysql ec - no query', async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - exc 1`, async done => {
+it(`knex - mysql - exc 1`, done => {
 
+(async function () {
     try {
 
         await man.query({}, 'select ? from :table: u where u.:id: in (:test)', ['lastName', [1, 2]]);
@@ -52,10 +55,12 @@ it(`knex - mysql - exc 1`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - exc 2`, async done => {
+it(`knex - mysql - exc 2`, done => {
 
+(async function () {
     try {
 
         await man.query({}, 'select ?? from :table: u where u.:id: in (:test)', ['lastName', [1, 2]]);
@@ -66,10 +71,12 @@ it(`knex - mysql - exc 2`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - exc semi`, async done => {
+it(`knex - mysql - exc semi`, done => {
 
+(async function () {
     const data = await man.query({}, 'select :p1: from :table: u where :id: in (:p2)', {
         p1:'lastName',
         p2: [1, 2]
@@ -81,10 +88,12 @@ it(`knex - mysql - exc semi`, async done => {
     ]);
 
     done();
+    }())
 });
 
-it(`knex - mysql - wrong fromDb`, async done => {
+it(`knex - mysql - wrong fromDb`, done => {
 
+(async function () {
     try {
 
         await knex().model.wrongTest.queryColumn({}, 'select email from :table: u where lastName = :p1', {
@@ -99,10 +108,12 @@ it(`knex - mysql - wrong fromDb`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - exc not semi`, async done => {
+it(`knex - mysql - exc not semi`, done => {
 
+(async function () {
     const data = await man.queryColumn({}, 'select email from :table: u where lastName = :p1', {
         p1: 'admin'
     });
@@ -110,10 +121,12 @@ it(`knex - mysql - exc not semi`, async done => {
     expect(data).toEqual('admin@gmail.com');
 
     done();
+    }())
 });
 
-it(`knex - mysql - ER_PARSE_ERROR, object params`, async done => {
+it(`knex - mysql - ER_PARSE_ERROR, object params`, done => {
 
+(async function () {
     try {
 
         await man.queryColumn({}, 'select email from :table: :table: u where lastName = :p1', {
@@ -126,10 +139,12 @@ it(`knex - mysql - ER_PARSE_ERROR, object params`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - ER_PARSE_ERROR, array params`, async done => {
+it(`knex - mysql - ER_PARSE_ERROR, array params`, done => {
 
+(async function () {
     try {
 
         await man.queryColumn({}, 'select email from :table: :table: u where lastName = ?', ['admin']);
@@ -140,10 +155,12 @@ it(`knex - mysql - ER_PARSE_ERROR, array params`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - queryOne - more then one`, async done => {
+it(`knex - mysql - queryOne - more then one`, done => {
 
+(async function () {
     try {
 
         const find = await manc.queryOne({}, 'select * from roles where name in (?)', [['admin', 'user']]);
@@ -154,19 +171,23 @@ it(`knex - mysql - queryOne - more then one`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - queryOne, error`, async done => {
+it(`knex - mysql - queryOne, error`, done => {
 
+(async function () {
     const one = await man.queryOne({}, 'select email from :table: u where lastName = ?', ['xyz']);
 
     expect(one).toEqual(undefined);
 
     done();
+    }())
 });
 
-it(`knex - mysql - queryOne, table reserved`, async done => {
+it(`knex - mysql - queryOne, table reserved`, done => {
 
+(async function () {
     try {
 
         await man.queryOne({}, 'select email from :table: u where lastName = :p1', {__table: 'users', p1: 'xyz'});
@@ -177,10 +198,12 @@ it(`knex - mysql - queryOne, table reserved`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - queryOne, table used but on common`, async done => {
+it(`knex - mysql - queryOne, table used but on common`, done => {
 
+(async function () {
     try {
 
         await manc.queryOne({}, 'select email from :table: u where lastName = :p1');
@@ -191,10 +214,12 @@ it(`knex - mysql - queryOne, table used but on common`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - queryOne, id reserved`, async done => {
+it(`knex - mysql - queryOne, id reserved`, done => {
 
+(async function () {
     try {
 
         await man.queryOne({}, 'select email from :id: u where lastName = :p1', {__id: 'users', p1: 'xyz'});
@@ -205,10 +230,12 @@ it(`knex - mysql - queryOne, id reserved`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - queryOne, id used but on common`, async done => {
+it(`knex - mysql - queryOne, id used but on common`, done => {
 
+(async function () {
     try {
 
         await manc.queryOne({}, 'select email from :id: u where lastName = :p1');
@@ -219,10 +246,12 @@ it(`knex - mysql - queryOne, id used but on common`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - queryOne, missing param`, async done => {
+it(`knex - mysql - queryOne, missing param`, done => {
 
+(async function () {
     try {
 
         await man.queryOne({}, 'select email from :table: where lastName = :p1', {});
@@ -233,10 +262,12 @@ it(`knex - mysql - queryOne, missing param`, async done => {
 
         done();
     }
+    }())
 });
 
-it(`knex - mysql - find, error - not string select`, async done => {
+it(`knex - mysql - find, error - not string select`, done => {
 
+(async function () {
     try {
 
         await man.find({}, 1, 56);
@@ -246,12 +277,13 @@ it(`knex - mysql - find, error - not string select`, async done => {
         expect(String(e)).toEqual("Error: users.js error: second argument of find method should be string");
 
         done();
-
     }
+    }())
 });
 
-it('knex - mysql, log.dump but in array params case', async done => {
+it('knex - mysql, log.dump but in array params case', done => {
 
+(async function () {
     const list = await man.query({}, 'show databases', []);
 
     let tmp = list.map(x => Object.values(x)[0]);
@@ -268,5 +300,6 @@ it('knex - mysql, log.dump but in array params case', async done => {
 
         done();
     }
+    }())
 });
 

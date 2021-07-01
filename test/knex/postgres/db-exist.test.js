@@ -13,13 +13,13 @@ knex.init(config);
 it('knex - db exist', done => {
 
   (async function () {
-    const users = knex().model.users;
+    const users = knex('pg').model.users;
 
-    const list = await users.query({}, 'show databases');
+    const list = await users.query({}, 'SELECT datname FROM pg_database WHERE datistemplate = false');
 
     let tmp = list.map(x => Object.values(x)[0]);
 
-    const db = process.env.PROTECTED_MYSQL_DB;
+    const db = process.env.PROTECTED_PG_DB;
 
     if (db) {
 

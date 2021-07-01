@@ -18,11 +18,11 @@ let manm;
 
 beforeAll(async () => {
 
-  manc = knex().model.common;
+  manc = knex('pg').model.common;
 
-  man = knex().model.users;
+  man = knex('pg').model.users;
 
-  manm = knex().model.many;
+  manm = knex('pg').model.many;
 
   await clear();
 });
@@ -36,12 +36,12 @@ afterAll(async () => {
 
 const clear = async () => {
 
-  await manc.raw({}, `truncate many`);
+  await manc.raw({}, `TRUNCATE TABLE many RESTART IDENTITY`);
 };
 
 beforeEach(clear);
 
-it(`knex - mysql - insert`, done => {
+it(`knex - postgres - insert`, done => {
 
   (async function () {
     await manm.insert({}, {
@@ -58,7 +58,7 @@ it(`knex - mysql - insert`, done => {
   }())
 });
 
-it(`knex - mysql - insert, hasOwnProperty`, done => {
+it(`knex - postgres - insert, hasOwnProperty`, done => {
 
   (async function () {
     await manm.insert({}, {

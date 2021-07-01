@@ -1,6 +1,4 @@
 
-const path              = require('path');
-
 const abstract          = require('knex-prototype');
 
 const extend            = abstract.extend;

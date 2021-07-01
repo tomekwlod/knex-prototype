@@ -18,11 +18,11 @@ let manm;
 
 beforeAll(async () => {
 
-    manc    = knex().model.common;
+    manc    = knex('pg').model.common;
 
-    man     = knex().model.users;
+    man     = knex('pg').model.users;
 
-    manm    = knex().model.many;
+    manm    = knex('pg').model.many;
 
     await clear();
 });
@@ -36,10 +36,10 @@ afterAll(async () => {
 
 const clear = async () => {
 
-    await manc.raw({}, `truncate many`);
+    await manc.raw({}, `TRUNCATE TABLE many RESTART IDENTITY`);
 };
 
-it(`knex - mysql - find`, done => {
+it(`knex - postgres - find`, done => {
 
 (async function () {
     const {created, updated, roles, config, password, ...rest} = await man.find({}, 1);
@@ -57,10 +57,10 @@ it(`knex - mysql - find`, done => {
     }())
 });
 
-it(`knex - mysql - find with custom select`, done => {
+it(`knex - postgres - find with custom select`, done => {
 
 (async function () {
-    const data = await man.find({}, 1, 'lastName, firstName');
+    const data = await man.find({}, 1, '"lastName", "firstName"');
 
     expect(data).toEqual({
         "lastName": "admin",
