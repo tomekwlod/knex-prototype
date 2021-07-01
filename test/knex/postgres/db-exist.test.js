@@ -10,20 +10,18 @@ const config = require('../../../models/config');
 
 knex.init(config);
 
-it('knex - db exist', done => {
-
+it('knex - db exist', (done) => {
   (async function () {
     const users = knex('pg').model.users;
 
     const list = await users.query({}, 'SELECT datname FROM pg_database WHERE datistemplate = false');
 
-    let tmp = list.map(x => Object.values(x)[0]);
+    let tmp = list.map((x) => Object.values(x)[0]);
 
     const db = process.env.PROTECTED_PG_DB;
 
     if (db) {
-
-      const found = tmp.find(x => x === db);
+      const found = tmp.find((x) => x === db);
 
       expect(found).toEqual(db);
 
@@ -31,5 +29,5 @@ it('knex - db exist', done => {
 
       done();
     }
-  }())
+  })();
 });

@@ -8,8 +8,7 @@ require('dotenv-up')(5, false, 'tests');
 
 const config = require('../../../../models/config');
 
-it('knex - init twice', done => {
-
+it('knex - init twice', (done) => {
   (async function () {
     const first = knex.init(config);
 
@@ -20,9 +19,9 @@ it('knex - init twice', done => {
       second,
     }).toEqual({
       first: 0,
-      second: "knex-prototype: Connections are already initialized, no need to call init() again",
+      second: 'knex-prototype: Connections are already initialized, no need to call init() again',
     });
 
     done();
-  }())
+  })();
 });

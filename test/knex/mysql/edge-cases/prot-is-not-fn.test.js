@@ -12,18 +12,14 @@ require('dotenv-up')(5, false, 'tests');
 
 const config = require('../../../../models/config');
 
-it('knex - prototype is not a function', done => {
-
+it('knex - prototype is not a function', (done) => {
   (async function () {
     try {
-      extend(knex, {})
-    }
-    catch (e) {
-
-      expect(String(e)).toEqual("Error: extend: prototype is not a function, it is: object");
+      extend(knex, {});
+    } catch (e) {
+      expect(String(e)).toEqual('Error: extend: prototype is not a function, it is: object');
 
       done();
     }
-  }())
-
+  })();
 });

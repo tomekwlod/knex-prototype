@@ -10,8 +10,7 @@ const config = require('../../../../models/config');
 
 knex.init(config);
 
-it('knex - explicit name', done => {
-
+it('knex - explicit name', (done) => {
   (async function () {
     const man = knex('mysql').model.common;
 
@@ -19,12 +18,12 @@ it('knex - explicit name', done => {
 
     const db = config.mysql.connection.database;
 
-    const tmp = list.map(t => Object.values(t)[0]).find(x => x === db);
+    const tmp = list.map((t) => Object.values(t)[0]).find((x) => x === db);
 
     man.destroy();
 
     expect(tmp).toEqual(db);
 
     done();
-  }())
+  })();
 });

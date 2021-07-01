@@ -1,16 +1,16 @@
 'use strict';
 
-const path              = require('path');
+const path = require('path');
 
-const log               = require('inspc');
+const log = require('inspc');
 
-const knex              = require('knex-prototype');
+const knex = require('knex-prototype');
 
 require('dotenv-up')(4, false, 'tests');
 
-const fixturesTool      = require('./tree-fixtures');
+const fixturesTool = require('./tree-fixtures');
 
-const config            = require('../lr-tree-model/config');
+const config = require('../lr-tree-model/config');
 
 knex.init(config);
 
@@ -19,241 +19,217 @@ let man;
 let mtree;
 
 beforeAll(async () => {
+  man = knex().model.users;
 
-    man     = knex().model.users;
-
-    mtree   = knex().model.tree;
+  mtree = knex().model.tree;
 });
 
 afterAll(async () => {
+  // await clear();
 
-    // await clear();
-
-    await man.destroy();
+  await man.destroy();
 });
 
 const prepare = async (file = 'tree-fixture-test-set-1') => {
+  const fixtures = fixturesTool({
+    yamlFile: path.resolve(__dirname, `${file}.yml`),
+    knex,
+  });
 
-    const fixtures = fixturesTool({
-        yamlFile: path.resolve(__dirname, `${file}.yml`),
-        knex,
+  await fixtures.reset();
+};
+
+it('nestedset - treeCreateAsNthChild 76', async (done) => {
+  let tmp;
+
+  try {
+    await prepare();
+
+    expect(await mtree.count()).toEqual(75);
+
+    tmp = await mtree.treeCheckIntegrity();
+
+    expect(tmp.valid).toBeTruthy();
+
+    const id = await mtree.insert({
+      title: 'test',
     });
 
-    await fixtures.reset();
-}
+    await mtree.treeCreateAsNthChild({
+      sourceId: id,
+      parentId: 12,
+    });
 
-it('nestedset - treeCreateAsNthChild 76', async done => {
+    expect(await mtree.count()).toEqual(76);
 
-    let tmp;
+    tmp = await mtree.treeCheckIntegrity();
 
-    try {
+    expect(tmp.valid).toBeTruthy();
 
-        await prepare();
+    const {created, updated, ...entity} = await mtree.find(id);
 
-        expect(await mtree.count()).toEqual(75);
+    expect(entity).toEqual({
+      tid: 76,
+      title: 'test',
+      tl: 20,
+      tlevel: 6,
+      tparent_id: 12,
+      tr: 21,
+      tsort: 1,
+    });
 
-        tmp = await mtree.treeCheckIntegrity();
+    done();
+  } catch (e) {
+    log.dump(e, 5);
 
-        expect(tmp.valid).toBeTruthy();
-
-        const id = await mtree.insert({
-            title: 'test',
-        });
-
-        await mtree.treeCreateAsNthChild({
-            sourceId: id,
-            parentId: 12,
-        });
-
-        expect(await mtree.count()).toEqual(76);
-
-        tmp = await mtree.treeCheckIntegrity();
-
-        expect(tmp.valid).toBeTruthy();
-
-        const { created, updated, ...entity } = await mtree.find(id);
-
-        expect(entity).toEqual({
-            "tid": 76,
-            "title": "test",
-            "tl": 20,
-            "tlevel": 6,
-            "tparent_id": 12,
-            "tr": 21,
-            "tsort": 1,
-        });
-
-        done();
-    }
-    catch (e) {
-
-        log.dump(e, 5);
-
-        throw e;
-    }
+    throw e;
+  }
 });
 
-it('nestedset - treeCreateAsNthChild 9', async done => {
+it('nestedset - treeCreateAsNthChild 9', async (done) => {
+  let tmp;
 
-    let tmp;
+  try {
+    await prepare();
 
-    try {
+    expect(await mtree.count()).toEqual(75);
 
-        await prepare();
+    tmp = await mtree.treeCheckIntegrity();
 
-        expect(await mtree.count()).toEqual(75);
+    expect(tmp.valid).toBeTruthy();
 
-        tmp = await mtree.treeCheckIntegrity();
+    await knex().transaction(async (trx) => {
+      const id = await mtree.insert(trx, {
+        title: 'test',
+      });
 
-        expect(tmp.valid).toBeTruthy();
+      await mtree.treeCreateAsNthChild(trx, {
+        sourceId: id,
+        parentId: 12,
+      });
 
-        await knex().transaction(async trx => {
+      expect(await mtree.count(trx)).toEqual(76);
 
-            const id = await mtree.insert(trx, {
-                title: 'test',
-            });
+      tmp = await mtree.treeCheckIntegrity(trx);
 
-            await mtree.treeCreateAsNthChild(trx, {
-                sourceId: id,
-                parentId: 12,
-            });
+      expect(tmp.valid).toBeTruthy();
 
-            expect(await mtree.count(trx)).toEqual(76);
+      const {created, updated, ...entity} = await mtree.find(trx, id);
 
-            tmp = await mtree.treeCheckIntegrity(trx);
+      expect(entity).toEqual({
+        tid: 76,
+        title: 'test',
+        tl: 20,
+        tlevel: 6,
+        tparent_id: 12,
+        tr: 21,
+        tsort: 1,
+      });
+    });
 
-            expect(tmp.valid).toBeTruthy();
+    done();
+  } catch (e) {
+    log.dump(e, 5);
 
-            const { created, updated, ...entity } = await mtree.find(trx, id);
-
-            expect(entity).toEqual({
-                "tid": 76,
-                "title": "test",
-                "tl": 20,
-                "tlevel": 6,
-                "tparent_id": 12,
-                "tr": 21,
-                "tsort": 1,
-            });
-        });
-
-        done();
-    }
-    catch (e) {
-
-        log.dump(e, 5);
-
-        throw e;
-    }
+    throw e;
+  }
 });
 
+it('nestedset - treeCreateAsNthChild rowUnderIndex', async (done) => {
+  let tmp;
 
-it('nestedset - treeCreateAsNthChild rowUnderIndex', async done => {
+  try {
+    await prepare();
 
-    let tmp;
+    expect(await mtree.count()).toEqual(75);
 
-    try {
+    tmp = await mtree.treeCheckIntegrity();
 
-        await prepare();
+    expect(tmp.valid).toBeTruthy();
 
-        expect(await mtree.count()).toEqual(75);
+    await knex().transaction(async (trx) => {
+      const id = await mtree.insert(trx, {
+        title: 'test',
+      });
 
-        tmp = await mtree.treeCheckIntegrity();
+      await mtree.treeCreateAsNthChild(trx, {
+        sourceId: id,
+        parentId: 3,
+        nOneIndexed: 6,
+      });
 
-        expect(tmp.valid).toBeTruthy();
+      expect(await mtree.count(trx)).toEqual(76);
 
-        await knex().transaction(async trx => {
+      tmp = await mtree.treeCheckIntegrity(trx);
 
-            const id = await mtree.insert(trx, {
-                title: 'test',
-            });
+      expect(tmp.valid).toBeTruthy();
 
-            await mtree.treeCreateAsNthChild(trx, {
-                sourceId: id,
-                parentId: 3,
-                nOneIndexed: 6,
-            });
+      const {created, updated, ...entity} = await mtree.find(trx, id);
 
-            expect(await mtree.count(trx)).toEqual(76);
+      expect(entity).toEqual({
+        tid: 76,
+        title: 'test',
+        tl: 14,
+        tlevel: 4,
+        tparent_id: 3,
+        tr: 15,
+        tsort: 6,
+      });
+    });
 
-            tmp = await mtree.treeCheckIntegrity(trx);
+    done();
+  } catch (e) {
+    log.dump(e, 5);
 
-            expect(tmp.valid).toBeTruthy();
-
-            const { created, updated, ...entity } = await mtree.find(trx, id);
-
-            expect(entity).toEqual({
-                "tid": 76,
-                "title": "test",
-                "tl": 14,
-                "tlevel": 4,
-                "tparent_id": 3,
-                "tr": 15,
-                "tsort": 6,
-            });
-        });
-
-        done();
-    }
-    catch (e) {
-
-        log.dump(e, 5);
-
-        throw e;
-    }
+    throw e;
+  }
 });
-it('nestedset - treeCreateAsNthChild rowUnderIndex beyond', async done => {
+it('nestedset - treeCreateAsNthChild rowUnderIndex beyond', async (done) => {
+  let tmp;
 
-    let tmp;
+  try {
+    await prepare();
 
-    try {
+    expect(await mtree.count()).toEqual(75);
 
-        await prepare();
+    tmp = await mtree.treeCheckIntegrity();
 
-        expect(await mtree.count()).toEqual(75);
+    expect(tmp.valid).toBeTruthy();
 
-        tmp = await mtree.treeCheckIntegrity();
+    await knex().transaction(async (trx) => {
+      const id = await mtree.insert(trx, {
+        title: 'test',
+      });
 
-        expect(tmp.valid).toBeTruthy();
+      await mtree.treeCreateAsNthChild(trx, {
+        sourceId: id,
+        parentId: 3,
+        nOneIndexed: 600,
+      });
 
-        await knex().transaction(async trx => {
+      expect(await mtree.count(trx)).toEqual(76);
 
-            const id = await mtree.insert(trx, {
-                title: 'test',
-            });
+      tmp = await mtree.treeCheckIntegrity(trx);
 
-            await mtree.treeCreateAsNthChild(trx, {
-                sourceId: id,
-                parentId: 3,
-                nOneIndexed: 600,
-            });
+      expect(tmp.valid).toBeTruthy();
 
-            expect(await mtree.count(trx)).toEqual(76);
+      const {created, updated, ...entity} = await mtree.find(trx, id);
 
-            tmp = await mtree.treeCheckIntegrity(trx);
+      expect(entity).toEqual({
+        tid: 76,
+        title: 'test',
+        tl: 48,
+        tlevel: 4,
+        tparent_id: 3,
+        tr: 49,
+        tsort: 13,
+      });
+    });
 
-            expect(tmp.valid).toBeTruthy();
+    done();
+  } catch (e) {
+    log.dump(e, 5);
 
-            const { created, updated, ...entity } = await mtree.find(trx, id);
-
-            expect(entity).toEqual({
-                "tid": 76,
-                "title": "test",
-                "tl": 48,
-                "tlevel": 4,
-                "tparent_id": 3,
-                "tr": 49,
-                "tsort": 13,
-            });
-        });
-
-        done();
-    }
-    catch (e) {
-
-        log.dump(e, 5);
-
-        throw e;
-    }
+    throw e;
+  }
 });
-

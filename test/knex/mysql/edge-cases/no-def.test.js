@@ -10,19 +10,16 @@ const config = require('../../../../models/config');
 
 delete config.def;
 
-it('knex - no def', done => {
-
+it('knex - no def', (done) => {
   (async function () {
     try {
-
       knex.init(config);
-    }
-    catch (e) {
-
-      expect(String(e)).toEqual("Error: knex-prototype: Not 'def' connection specified: 'config.js' for knex key 'knex.def'");
+    } catch (e) {
+      expect(String(e)).toEqual(
+        "Error: knex-prototype: Not 'def' connection specified: 'config.js' for knex key 'knex.def'"
+      );
 
       done();
     }
-
-  }())
+  })();
 });

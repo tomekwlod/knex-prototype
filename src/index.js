@@ -1,14 +1,13 @@
+const knex = require('./knex');
 
-const knex            = require('./knex');
+const extend = require('./extend');
 
-const extend          = require('./extend');
+const promiseall = require('nlab/promiseall');
 
-const promiseall      = require('nlab/promiseall');
-
-knex.extend           = extend;
+knex.extend = extend;
 
 knex.prototype_common = require('./prototype_common');
 
-knex.promiseall       = promiseall;
+knex.promiseall = promiseall;
 
-module.exports        = knex;
+module.exports = knex;

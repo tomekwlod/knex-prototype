@@ -1,16 +1,16 @@
 'use strict';
 
-const path              = require('path');
+const path = require('path');
 
-const log               = require('inspc');
+const log = require('inspc');
 
-const knex              = require('knex-prototype');
+const knex = require('knex-prototype');
 
 require('dotenv-up')(4, false, 'tests');
 
-const fixturesTool      = require('./tree-fixtures');
+const fixturesTool = require('./tree-fixtures');
 
-const config            = require('../lr-tree-model/config');
+const config = require('../lr-tree-model/config');
 
 knex.init(config);
 
@@ -19,127 +19,114 @@ let man;
 let mtree;
 
 beforeAll(async () => {
+  man = knex().model.users;
 
-    man     = knex().model.users;
-
-    mtree   = knex().model.tree;
+  mtree = knex().model.tree;
 });
 
 afterAll(async () => {
+  // await clear();
 
-    // await clear();
-
-    await man.destroy();
+  await man.destroy();
 });
 
 const prepare = async (file = 'tree-fixture-test-set-2') => {
+  const fixtures = fixturesTool({
+    yamlFile: path.resolve(__dirname, `${file}.yml`),
+    knex,
+  });
 
-    const fixtures = fixturesTool({
-        yamlFile: path.resolve(__dirname, `${file}.yml`),
-        knex,
+  await fixtures.reset();
+};
+
+it('nestedset - treeMoveToNthChild 76', async (done) => {
+  let tmp;
+
+  try {
+    await prepare();
+
+    expect(await mtree.count()).toEqual(85);
+
+    tmp = await mtree.treeCheckIntegrity();
+
+    expect(tmp.valid).toBeTruthy();
+
+    await mtree.treeMoveToNthChild({
+      sourceId: 12,
+      parentId: 3,
+      nOneIndexed: 11,
+      strict: true,
     });
 
-    await fixtures.reset();
-}
+    expect(await mtree.count()).toEqual(85);
 
-it('nestedset - treeMoveToNthChild 76', async done => {
+    tmp = await mtree.treeCheckIntegrity();
 
-    let tmp;
+    expect(tmp.valid).toBeTruthy();
 
-    try {
+    const {created, updated, ...entity} = await mtree.find(12);
 
-        await prepare();
+    expect(entity).toEqual({
+      tid: 12,
+      title: 'r1 a1 b6',
+      tl: 40,
+      tlevel: 4,
+      tparent_id: 3,
+      tr: 65,
+      tsort: 11,
+    });
 
-        expect(await mtree.count()).toEqual(85);
+    done();
+  } catch (e) {
+    log.dump(e, 5);
 
-        tmp = await mtree.treeCheckIntegrity();
-
-        expect(tmp.valid).toBeTruthy();
-
-        await mtree.treeMoveToNthChild({
-            sourceId    : 12,
-            parentId    : 3,
-            nOneIndexed : 11,
-            strict: true,
-        });
-
-        expect(await mtree.count()).toEqual(85);
-
-        tmp = await mtree.treeCheckIntegrity();
-
-        expect(tmp.valid).toBeTruthy();
-
-        const { created, updated, ...entity } = await mtree.find(12);
-
-        expect(entity).toEqual({
-            "tid": 12,
-            "title": "r1 a1 b6",
-            "tl": 40,
-            "tlevel": 4,
-            "tparent_id": 3,
-            "tr": 65,
-            "tsort": 11,
-        });
-
-        done();
-    }
-    catch (e) {
-
-        log.dump(e, 5);
-
-        throw e;
-    }
+    throw e;
+  }
 });
 
-it('nestedset - treeMoveToNthChild 9', async done => {
+it('nestedset - treeMoveToNthChild 9', async (done) => {
+  let tmp;
 
-    let tmp;
+  try {
+    await prepare();
 
-    try {
+    expect(await mtree.count()).toEqual(85);
 
-        await prepare();
+    tmp = await mtree.treeCheckIntegrity();
 
-        expect(await mtree.count()).toEqual(85);
+    expect(tmp.valid).toBeTruthy();
 
-        tmp = await mtree.treeCheckIntegrity();
+    await knex().transaction(async (trx) => {
+      await mtree.treeMoveToNthChild(trx, {
+        sourceId: 12,
+        parentId: 3,
+        nOneIndexed: 11,
+        strict: true,
+      });
 
-        expect(tmp.valid).toBeTruthy();
+      expect(await mtree.count(trx)).toEqual(85);
 
-        await knex().transaction(async trx => {
+      tmp = await mtree.treeCheckIntegrity(trx);
 
-            await mtree.treeMoveToNthChild(trx, {
-                sourceId    : 12,
-                parentId    : 3,
-                nOneIndexed : 11,
-                strict: true,
-            });
+      expect(tmp.valid).toBeTruthy();
 
-            expect(await mtree.count(trx)).toEqual(85);
+      const {created, updated, ...entity} = await mtree.find(trx, 12);
 
-            tmp = await mtree.treeCheckIntegrity(trx);
+      expect(entity).toEqual({
+        tid: 12,
+        title: 'r1 a1 b6',
+        tl: 40,
+        tlevel: 4,
+        tparent_id: 3,
+        tr: 65,
+        tsort: 11,
+      });
+    });
 
-            expect(tmp.valid).toBeTruthy();
+    done();
+  } catch (e) {
+    log.dump(e, 5);
 
-            const { created, updated, ...entity } = await mtree.find(trx, 12);
-
-            expect(entity).toEqual({
-                "tid": 12,
-                "title": "r1 a1 b6",
-                "tl": 40,
-                "tlevel": 4,
-                "tparent_id": 3,
-                "tr": 65,
-                "tsort": 11,
-            });
-        });
-
-        done();
-    }
-    catch (e) {
-
-        log.dump(e, 5);
-
-        throw e;
-    }
+    throw e;
+  }
 });
-

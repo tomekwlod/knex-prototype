@@ -19,7 +19,6 @@ let manm;
 let connection;
 
 beforeAll(async () => {
-
   connection = knex();
 
   manc = connection.model.common;
@@ -32,21 +31,18 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-
   await clear();
 
   await man.destroy();
 });
 
 const clear = async () => {
-
   await manc.raw({}, `truncate many`);
 };
 
 beforeEach(clear);
 
-it(`knex - no transactify`, done => {
-
+it(`knex - no transactify`, (done) => {
   (async function () {
     const id = await manm.transactifytest({}, 'title1');
 
@@ -73,17 +69,15 @@ it(`knex - no transactify`, done => {
     ]);
 
     done();
-  }())
+  })();
 });
 
-it(`knex - no transactify`, done => {
-
+it(`knex - no transactify`, (done) => {
   (async function () {
     let id;
 
-    await connection.transaction(async trx => {
-
-      id = await manm.transactifytest({ trx }, 'title1');
+    await connection.transaction(async (trx) => {
+      id = await manm.transactifytest({trx}, 'title1');
     });
 
     expect(id).toEqual(1);
@@ -109,21 +103,17 @@ it(`knex - no transactify`, done => {
     ]);
 
     done();
-  }())
+  })();
 });
 
-it(`knex - transactify - no function given`, done => {
-
+it(`knex - transactify - no function given`, (done) => {
   (async function () {
     try {
-
       await manm.transactify({}, 'test');
-    }
-    catch (e) {
-
-      expect(String(e)).toEqual("Error: many.js error: transactify: logic is not a function");
+    } catch (e) {
+      expect(String(e)).toEqual('Error: many.js error: transactify: logic is not a function');
 
       done();
     }
-  }())
+  })();
 });

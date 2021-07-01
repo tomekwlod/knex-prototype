@@ -4,9 +4,9 @@
 // just go to doc, nothing to check manually...
 
 test.only('only', () => {
-    expect(true).toBeTruthy();
+  expect(true).toBeTruthy();
 });
 
 test('skipped', () => {
-    expect('A').toBe('A');
+  expect('A').toBe('A');
 });

@@ -1,15 +1,14 @@
+const common = require('./common');
 
-const common    = require('./common');
+const users = require('./users');
 
-const users     = require('./users');
-
-const many      = require('./many');
+const many = require('./many');
 
 const wrongTest = require('./wrongTest');
 
 module.exports = {
-    common,
-    users,
-    many,
-    wrongTest,
+  common,
+  users,
+  many,
+  wrongTest,
 };

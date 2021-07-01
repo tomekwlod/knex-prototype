@@ -19,7 +19,6 @@ let manc;
 let manm;
 
 beforeAll(async () => {
-
   manc = knex().model.common;
 
   man = knex().model.users;
@@ -30,40 +29,44 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-
   await clear();
 
   await man.destroy();
 });
 
 const clear = async () => {
-
   await manc.raw({}, `truncate many`);
 };
 
 beforeEach(clear);
 
-it(`knex - mysql - update`, done => {
-
+it(`knex - mysql - update`, (done) => {
   (async function () {
-    await manm.insert({}, {
-      title: 'test'
-    });
+    await manm.insert(
+      {},
+      {
+        title: 'test',
+      }
+    );
 
-    const affectedRows = await manm.update({}, {
-      title: 'test2'
-    }, {
-      title: 'test'
-    });
+    const affectedRows = await manm.update(
+      {},
+      {
+        title: 'test2',
+      },
+      {
+        title: 'test',
+      }
+    );
 
     expect(affectedRows).toEqual(1);
 
     const all = await manm.findAll({});
 
-    expect(all).toEqual([{ "id": 1, "title": "test2", "user_id": null }]);
+    expect(all).toEqual([{id: 1, title: 'test2', user_id: null}]);
 
     done();
-  }())
+  })();
 });
 
 // it(`knex - mysql - update, id`, async done => {

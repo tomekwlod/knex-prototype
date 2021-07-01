@@ -3,5 +3,5 @@
 const sub = require('./testlib/sub');
 
 it('sub test', () => {
-    expect(sub(50, 21)).toMatchSnapshot();
+  expect(sub(50, 21)).toMatchSnapshot();
 });

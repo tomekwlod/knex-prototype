@@ -17,7 +17,6 @@ let manc;
 let manm;
 
 beforeAll(async () => {
-
   manc = knex().model.common;
 
   man = knex().model.users;
@@ -28,42 +27,36 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-
   await clear();
 
   await man.destroy();
 });
 
 const clear = async () => {
-
   await manc.raw({}, `truncate many`);
 };
 
-it(`knex - mysql - findAll`, done => {
-
+it(`knex - mysql - findAll`, (done) => {
   (async function () {
     const data = await man.findAll({});
 
-    const map = data.map(a => {
-
-      const { created, updated, roles, config, enabled, id, firstName, lastName, password, ...rest } = a;
+    const map = data.map((a) => {
+      const {created, updated, roles, config, enabled, id, firstName, lastName, password, ...rest} = a;
 
       return rest;
     });
 
     expect(map).toEqual([
       {
-        "email": "admin@gmail.com",
+        email: 'admin@gmail.com',
         // "password": "adminpass"
       },
       {
-        "email": "user@gmail.com",
+        email: 'user@gmail.com',
         // "password": "password1234"
       },
     ]);
 
     done();
-  }())
+  })();
 });
-
-

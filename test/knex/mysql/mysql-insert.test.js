@@ -17,7 +17,6 @@ let manc;
 let manm;
 
 beforeAll(async () => {
-
   manc = knex().model.common;
 
   man = knex().model.users;
@@ -28,47 +27,54 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-
   await clear();
 
   await man.destroy();
 });
 
 const clear = async () => {
-
   await manc.raw({}, `truncate many`);
 };
 
 beforeEach(clear);
 
-it(`knex - mysql - insert`, done => {
-
+it(`knex - mysql - insert`, (done) => {
   (async function () {
-    await manm.insert({}, {
-      title: 'test'
-    });
+    await manm.insert(
+      {},
+      {
+        title: 'test',
+      }
+    );
 
-    const id = await manm.insert({}, {
-      title: 'test'
-    });
+    const id = await manm.insert(
+      {},
+      {
+        title: 'test',
+      }
+    );
 
     expect(id).toEqual(2);
 
     done();
-  }())
+  })();
 });
 
-it(`knex - mysql - insert, hasOwnProperty`, done => {
-
+it(`knex - mysql - insert, hasOwnProperty`, (done) => {
   (async function () {
-    await manm.insert({}, {
-      title: 'test'
-    });
+    await manm.insert(
+      {},
+      {
+        title: 'test',
+      }
+    );
 
-    const a = function () { };
+    const a = function () {};
     a.prototype.other = 'other';
 
-    const b = function (t) { this.title = t };
+    const b = function (t) {
+      this.title = t;
+    };
 
     b.prototype = Object.create(a.prototype);
 
@@ -85,6 +91,5 @@ it(`knex - mysql - insert, hasOwnProperty`, done => {
     expect(count).toEqual(2);
 
     done();
-
-  }())
+  })();
 });

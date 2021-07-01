@@ -1,12 +1,11 @@
+const common = require('./common');
 
-const common                    = require('./common');
+const users = require('./users');
 
-const users                     = require('./users');
-
-const tree                      = require('./tree');
+const tree = require('./tree');
 
 module.exports = {
-    common,
-    users,
-    tree,
+  common,
+  users,
+  tree,
 };

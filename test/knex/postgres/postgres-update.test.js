@@ -19,7 +19,6 @@ let manc;
 let manm;
 
 beforeAll(async () => {
-
   manc = knex('pg').model.common;
 
   man = knex('pg').model.users;
@@ -30,40 +29,44 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-
   await clear();
 
   await man.destroy();
 });
 
 const clear = async () => {
-
   await manc.raw({}, `TRUNCATE TABLE many RESTART IDENTITY`);
 };
 
 beforeEach(clear);
 
-it(`knex - postgres - update`, done => {
-
+it(`knex - postgres - update`, (done) => {
   (async function () {
-    await manm.insert({}, {
-      title: 'test'
-    });
+    await manm.insert(
+      {},
+      {
+        title: 'test',
+      }
+    );
 
-    const affectedRows = await manm.update({}, {
-      title: 'test2'
-    }, {
-      title: 'test'
-    });
+    const affectedRows = await manm.update(
+      {},
+      {
+        title: 'test2',
+      },
+      {
+        title: 'test',
+      }
+    );
 
     expect(affectedRows).toEqual(1);
 
     const all = await manm.findAll({});
 
-    expect(all).toEqual([{ "id": 1, "title": "test2", "user_id": null }]);
+    expect(all).toEqual([{id: 1, title: 'test2', user_id: null}]);
 
     done();
-  }())
+  })();
 });
 
 // it(`knex - postgres - update, id`, async done => {

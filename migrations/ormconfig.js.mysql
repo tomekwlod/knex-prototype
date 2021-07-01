@@ -16,17 +16,17 @@ const config = {
    ],
    // "migrationsTableName": "migration_versions",
    "entities": [
-      "src/entity_mysql/**/*.ts"
+      "src/mysql_entity/**/*.ts"
    ],
    "migrations": [
-      "src/migration_mysql/**/*.ts"
+      "src/mysql_migration/**/*.ts"
    ],
    "subscribers": [
       "src/subscriber/**/*.ts"
    ],
    "cli": {
-      "entitiesDir": "src/entity_mysql",
-      "migrationsDir": "src/migration_mysql",
+      "entitiesDir": "src/mysql_entity",
+      "migrationsDir": "src/mysql_migration",
       "subscribersDir": "src/subscriber"
    }
 }
