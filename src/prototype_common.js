@@ -220,13 +220,7 @@ prototype.prototype.fetch = function (opt, ...args) {
             } catch (e) {
               return Promise.reject(e);
             }
-          })().then((rows) => {
-            if (!Array.isArray(rows)) {
-              throw this.Error(`fetch: rows is not an array`);
-            }
-
-            return rows;
-          });
+          })();
         }
 
         return rows;
@@ -262,13 +256,7 @@ prototype.prototype.queryOne = function (opt, ...args) {
             } catch (e) {
               return Promise.reject(e);
             }
-          })().then((rows) => {
-            if (!Array.isArray(rows)) {
-              throw this.Error(`queryOne: rows is not an array`);
-            }
-
-            return rows;
-          });
+          })();
         }
 
         return [row];
@@ -314,13 +302,7 @@ prototype.prototype.find = function (opt, id, select = '*') {
             } catch (e) {
               return Promise.reject(e);
             }
-          })().then((rows) => {
-            if (!Array.isArray(rows)) {
-              throw this.Error(`find: rows is not an array`);
-            }
-
-            return rows;
-          });
+          })();
         }
 
         return [row];

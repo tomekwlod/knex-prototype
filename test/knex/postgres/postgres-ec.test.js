@@ -86,7 +86,7 @@ it(`knex - postgres - wrong fromDb`, (done) => {
 
       done('wrong');
     } catch (e) {
-      expect(String(e)).toEqual('Error: users.js error: queryOne: rows is not an array');
+      expect(String(e)).toEqual('Error: users.js error: queryOne error: rows is not an array');
 
       done();
     }
