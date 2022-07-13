@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   mysql:
-    image: mysql/mysql-server:8.0.27
+    build:
+      context: mysql
+      dockerfile: Dockerfile
     container_name: ${PROJECT_NAME}_mysql
     ports:
       - '${MYSQL_PORT}:3306'
@@ -10,7 +12,8 @@ services:
       MYSQL_ROOT_HOST: '%'
     volumes:
       #      - ${MYSQL_DOCKER_DIR}/${PROJECT_NAME}:/var/lib/mysql
-      - ${MYSQL_DOCKER_DIR:-./mysql_db}/${PROJECT_NAME}:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/my.cnf
+      - ${MYSQL_DOCKER_DIR:-./mysql_db}/${PROJECT_NAME}:/var/data
       - ../designer:/var/designer
     networks:
       - scoped-network
