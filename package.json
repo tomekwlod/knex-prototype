@@ -4,7 +4,10 @@
   "description": "",
   "main": "src",
   "scripts": {
-    "test": "/bin/bash test.sh"
+    "test": "/bin/bash test.sh",
+    "style:check": "yarn prettier --check .",
+    "style:fix": "yarn prettier --write .",
+    "style:list": "yarn prettier --list-different ."
   },
   "engines": {
     "node": ">=10"
@@ -44,5 +47,8 @@
     "mysql": "^2.18.1",
     "nlab": "^0.0.53",
     "pg": "^8.6.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
   }
 }

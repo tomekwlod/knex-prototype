@@ -10,9 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/tomekwlod/knex-prototype.git"
   },
-  "keywords": [
-    "knex"
-  ],
+  "keywords": ["knex"],
   "author": "Szymon Działowski",
   "license": "MIT",
   "bugs": {
@@ -26,13 +24,8 @@
     "verbose": true,
     "bail": true,
     "collectCoverage": true,
-    "coverageReporters": [
-      "html",
-      "lcov"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ]
+    "coverageReporters": ["html", "lcov"],
+    "collectCoverageFrom": ["src/**/*.{js,jsx}"]
   },
   "dependencies": {
     "@babel/standalone": "^7.4.2",
