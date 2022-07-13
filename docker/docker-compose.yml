@@ -1,35 +1,67 @@
-version: '3.1'
-
+version: '3.8'
 services:
-    mysql:
-        container_name: knex-proto-mysql
-        image: mysql/mysql-server:5.7
-        ports:
-            - "1060:3306"
-        environment:
-            - MYSQL_ROOT_PASSWORD=docker_super_secret_passwd
-            - MYSQL_ROOT_HOST=%
-        volumes:
-            - ./mysql:/var/lib/mysql
-    postgres:
-        container_name: knex-proto-postgres
-        image: postgres:9.6.20
-        ports:
-            - 1061:5432
-        environment:
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_USER: postgres
-            POSTGRES_DB: knex
-        volumes:
-            - ./postgres:/var/lib/postgresql/data
-    pgadmin:
-        container_name: pgadmin
-        image: dpage/pgadmin4:4.30
-        environment:
-            PGADMIN_DEFAULT_EMAIL: "admin@gmail.com"
-            PGADMIN_DEFAULT_PASSWORD: "password"
-        volumes:
-            - ./pgadmin:/var/lib/pgadmin
-        ports:
-            - "1062:80"
-#        restart: unless-stopped
+  mysql:
+    image: mysql/mysql-server:8.0.27
+    container_name: ${PROJECT_NAME}_mysql
+    ports:
+      - '${MYSQL_PORT}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      #      - ${MYSQL_DOCKER_DIR}/${PROJECT_NAME}:/var/lib/mysql
+      - ${MYSQL_DOCKER_DIR:-./mysql_db}/${PROJECT_NAME}:/var/lib/mysql
+      - ../designer:/var/designer
+    networks:
+      - scoped-network
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  phpmyadmin:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      context: pma
+      dockerfile: Dockerfile
+    #    image: phpmyadmin/phpmyadmin:4.9
+    #    image: phpmyadmin/phpmyadmin:5.1.1
+    container_name: ${PROJECT_NAME}_pma
+    ports:
+      - '${PHPMYADMIN_PORT}:80'
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASS}
+      PMA_PMADB: ${PMA_PMADB}
+    volumes:
+      #      - ./pma/config.inc.4.9.php:/etc/phpmyadmin/config.inc.php
+      - ./pma/config.inc.5.1.1.php:/etc/phpmyadmin/config.inc.php
+    networks:
+      - scoped-network
+
+#  docker run --name myadmin -d --link mysql_db_server:db -p 8080:80 -v /some/local/directory/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php phpmyadmin
+# from: https://hub.docker.com/r/phpmyadmin/phpmyadmin
+
+#  redis:
+#    image: redis:3.2.4
+#    container_name: ${PROJECT_NAME}_redis
+#    ports:
+#      - "${REDIS_PORT}:6379"
+#    volumes:
+#      - ${REDIS_DOCKER_DIR:-./redis_db}:/data
+#    networks:
+#      - scoped-network
+#
+#  redisinsight:
+#    image: redislabs/redisinsight:1.7.0
+#    container_name: ${PROJECT_NAME}_redisinsight
+#    ports:
+#      - "${REDISINSIGHT_PORT}:8001"
+#    networks:
+#      - scoped-network
+networks:
+  scoped-network:
+    name: network-${PROJECT_NAME}

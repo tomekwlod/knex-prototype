@@ -56,7 +56,7 @@ it('knex - mysql', (done) => {
 
     let tmp = list.map((x) => Object.values(x)[0]);
 
-    const db = process.env.PROTECTED_MYSQL_DB;
+    const db = process.env.MYSQL_DB;
 
     if (db) {
       const found = tmp.find((x) => x === db);

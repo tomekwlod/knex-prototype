@@ -1,8 +1,3 @@
-# https://docs.docker.com/compose/reference/envvars/#compose_project_name
-COMPOSE_PROJECT_NAME:="$(shell cat docker/name.conf)"
-
-export COMPOSE_PROJECT_NAME
-
 u: # update npm and git (generates new tag)
 	@/bin/bash update.sh
 
@@ -37,12 +32,11 @@ ct: # travis parameters.json
 cp: # jest parameters.json
 	@/bin/bash update.sh --prod
 
-doc: docs
-	(cd docker && docker-compose build)
-	(cd docker && docker-compose up -d --build)
+up: down
+	/bin/bash docker/docker-compose.sh up
 
-docs:
-	cd docker && docker-compose stop
+down:
+	/bin/bash docker/docker-compose.sh down
 
 islinked:
 	@cd dev && /bin/bash islinked.sh
