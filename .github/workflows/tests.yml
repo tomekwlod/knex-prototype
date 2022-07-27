@@ -31,9 +31,11 @@ jobs:
       - name: Prepare .env
         run: cp .env.dist .env
       - name: Yarn install
-        run: yarn install
-      - name: Knex link
+        run: yarn install --production=false
+      - name: npm link knex-prototype
         run: make link
+      - name: link migrations/node_modules
+        run: cd migrations && ln -s ../node_modules node_modules
       - name: Setup migration config
         run: cp migrations/ormconfig.js.mysql migrations/ormconfig.js
       - name: MySQL healtly?

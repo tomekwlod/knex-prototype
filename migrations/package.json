@@ -10,7 +10,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "dotenv-up": "^1.0.28",
-    "knex-abstract": "^0.0.59",
     "mysql": "^2.14.1",
     "nlab": "^0.0.107",
     "reflect-metadata": "^0.1.10",

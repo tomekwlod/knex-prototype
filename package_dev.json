@@ -10,7 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/tomekwlod/knex-prototype.git"
   },
-  "keywords": ["knex"],
+  "keywords": [
+    "knex"
+  ],
   "author": "Szymon Działowski",
   "license": "MIT",
   "bugs": {
@@ -24,8 +26,13 @@
     "verbose": true,
     "bail": true,
     "collectCoverage": true,
-    "coverageReporters": ["html", "lcov"],
-    "collectCoverageFrom": ["src/**/*.{js,jsx}"]
+    "coverageReporters": [
+      "html",
+      "lcov"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ]
   },
   "dependencies": {
     "@babel/standalone": "^7.4.2",
@@ -34,12 +41,13 @@
     "js-yaml": "^3.13.0",
     "knex": "^0.21.18",
     "mysql": "^2.18.1",
-    "nlab": "^0.0.53",
+    "nlab": "^0.0.122",
     "nodemon": "^1.18.10",
     "pg": "^8.6.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "typeorm": "^0.3.7"
   },
   "devDependencies": {
     "codecov": "^3.1.0",
