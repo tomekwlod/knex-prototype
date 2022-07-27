@@ -498,8 +498,7 @@ knex.init({
 
 git clone https://github.com/tomekwlod/knex-prototype.git
 cd knex-prototype
-make doc
-sleep 10 # give little time for mysql docker to start
+make up
 # this exchanges the package.json with the package_prod
 make ct
 cp .env.dist .env

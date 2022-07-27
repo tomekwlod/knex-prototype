@@ -45,26 +45,28 @@ services:
     networks:
       - scoped-network
 
-#  docker run --name myadmin -d --link mysql_db_server:db -p 8080:80 -v /some/local/directory/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php phpmyadmin
-# from: https://hub.docker.com/r/phpmyadmin/phpmyadmin
-
-#  redis:
-#    image: redis:3.2.4
-#    container_name: ${PROJECT_NAME}_redis
-#    ports:
-#      - "${REDIS_PORT}:6379"
-#    volumes:
-#      - ${REDIS_DOCKER_DIR:-./redis_db}:/data
-#    networks:
-#      - scoped-network
-#
-#  redisinsight:
-#    image: redislabs/redisinsight:1.7.0
-#    container_name: ${PROJECT_NAME}_redisinsight
-#    ports:
-#      - "${REDISINSIGHT_PORT}:8001"
-#    networks:
-#      - scoped-network
+  postgres:
+    container_name: knex-proto-postgres
+    image: postgres:9.6.20
+    ports:
+      - 1061:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ${PROTECTED_PG_DB}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:4.30
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'admin@gmail.com'
+      PGADMIN_DEFAULT_PASSWORD: 'password'
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    ports:
+      - '1062:80'
+#        restart: unless-stopped
 networks:
   scoped-network:
     name: network-${PROJECT_NAME}

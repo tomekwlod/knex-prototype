@@ -49,11 +49,25 @@ WHERE schemaname != 'pg_catalog' AND
 
     process.stdout.write(count);
 
-    await connection.close();
+    switch (config.type) {
+      case 'postgres':
+        break;
+      case 'mysql':
+        await connection.close();
+      default:
+        throw new Error(`mcount.js error: unknown type 2 (${config.type})`);
+    }
   } catch (e) {
     console.log('CATCH ERROR: ', e);
 
-    await connection.close();
+    switch (config.type) {
+      case 'postgres':
+        break;
+      case 'mysql':
+        await connection.close();
+      default:
+        throw new Error(`mcount.js error: unknown type 3 (${config.type})`);
+    }
 
     setTimeout(() => process.exit(1), 1);
 
