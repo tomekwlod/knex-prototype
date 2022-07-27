@@ -8,6 +8,17 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    services: # https://github.com/actions/example-services/actions/runs/449599975/workflow
+      mysql:
+        image: mysql/mysql-server:8.0.27
+        env:
+#          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: docker_super_secret_passwd
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 4238:3306
+        # needed because the mysql container does not provide a healthcheck
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -23,14 +34,6 @@ jobs:
         run: make link
       - name: Setup migration config
         run: cp migrations/ormconfig.js.mysql migrations/ormconfig.js
-      - uses: mirromutth/mysql-action@v1.1 # https://github.com/marketplace/actions/setup-mysql#the-default-mysql
-        with:
-          host port: 4238 # Optional, default value is 3306. The port of host
-          character set server: 'utf8' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
-          collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
-          mysql version: '8.0.27' # Optional, default value is "latest". The version of the MySQL
-          mysql database: 'knex' # Optional, default value is "test". The specified database which will be create
-          mysql root password: 'docker_super_secret_passwd' # Required if "mysql user" is empty, default is empty. The root superuser password
       - name: MySQL healtly?
         run: docker ps
       - name: MySQL fixtures
