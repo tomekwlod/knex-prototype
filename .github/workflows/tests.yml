@@ -39,6 +39,6 @@ jobs:
       - name: MySQL healtly?
         run: docker ps
       - name: MySQL fixtures
-        run: make fixtures
+        run: make mrun
       - name: test mysql
         run: /bin/bash test.sh test/knex/mysql
