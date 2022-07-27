@@ -11,15 +11,16 @@ jobs:
     services: # https://github.com/actions/example-services/actions/runs/449599975/workflow
       mysql:
         image: mysql/mysql-server:8.0.27
-        container_name: mysql
         env:
+          MYSQL_DATABASE: knex
 #          MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_ROOT_PASSWORD: docker_super_secret_passwd
           MYSQL_ROOT_HOST: '%'
         ports:
           - 4238:3306
         # needed because the mysql container does not provide a healthcheck
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idservicesservice_idoptions
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10 --name=mysql
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
