@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/tomekwlod/knex-prototype.svg?branch=v0.0.28)](https://travis-ci.com/tomekwlod/knex-prototype)
+![example workflow](https://github.com/tomekwlod/knex-prototype/actions/workflows/tests.yml/badge.svg)
 [![npm version](https://badge.fury.io/js/knex-prototype.svg)](https://badge.fury.io/js/knex-prototype)
-[![codecov](https://codecov.io/gh/tomekwlod/knex-prototype/branch/v0.0.28/graph/badge.svg)](https://codecov.io/gh/tomekwlod/knex-prototype/tree/v0.0.28)
+
 [![NpmLicense](https://img.shields.io/npm/l/knex-prototype.svg)](https://github.com/knex-prototype/blob/master/LICENSE)
 
 [![knex-prototype youtube demo - nested set example](yt.png)](https://youtu.be/d8k98noOR5c)
