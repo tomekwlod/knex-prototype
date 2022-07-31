@@ -40,6 +40,8 @@ jobs:
         run: cp migrations/ormconfig.js.mysql migrations/ormconfig.js
       - name: MySQL healtly?
         run: docker ps
+      - name: MySQL connectivity test
+        run: node mysql-test.js
       - name: MySQL fixtures
         run: cd migrations && make migrate
       - name: test mysql
