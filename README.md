@@ -5,6 +5,8 @@
 
 [![knex-prototype youtube demo - nested set example](yt.png)](https://youtu.be/d8k98noOR5c)
 
+https://github.com/tomekwlod/knex-prototype
+
 # Installation:
 
     npx knex-prototype
