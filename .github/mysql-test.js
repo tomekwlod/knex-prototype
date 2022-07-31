@@ -1,6 +1,6 @@
 const path = require('path');
 
-const env = path.resolve(__dirname, '.env');
+const env = path.resolve(__dirname, '..', '.env');
 
 const fsPromises = require('node:fs/promises');
 

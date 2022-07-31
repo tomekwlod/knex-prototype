@@ -43,8 +43,8 @@ jobs:
       - name: MySQL root access
         run: /bin/bash .github/mysql-root-access.sh
       - name: MySQL connectivity test
-        run: node mysql-test.js
+        run: node .github/mysql-test.js
       - name: MySQL fixtures
         run: cd migrations && make migrate
-      - name: test mysql
+      - name: tests mysql
         run: /bin/bash test.sh test/knex/mysql
