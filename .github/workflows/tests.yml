@@ -20,7 +20,7 @@ jobs:
           - 4238:3306
         # needed because the mysql container does not provide a healthcheck
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idservicesservice_idoptions
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10 --name=mysql
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10 --name=mysql_container
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -38,8 +38,10 @@ jobs:
         run: cd migrations && ln -s ../node_modules node_modules
       - name: Setup migration config
         run: cp migrations/ormconfig.js.mysql migrations/ormconfig.js
-      - name: MySQL healtly?
+      - name: MySQL healthy?
         run: docker ps
+      - name: MySQL root access
+        run: /bin/bash .github/mysql-root-access.sh
       - name: MySQL connectivity test
         run: node mysql-test.js
       - name: MySQL fixtures
