@@ -46,6 +46,21 @@ const clear = async () => {
 
 beforeEach(clear);
 
+it('knex - mysql - opt no object', (done) => {
+  (async function () {
+    const cman = knex().model.common;
+
+    try {
+      await cman.query([], 'show databases');
+
+    } catch (e) {
+      expect(String(e)).toContain('opt is not an object');
+
+      done();
+    }
+  })();
+});
+
 it(`knex - mysql - opt`, (done) => {
   (async function () {
     await man.transactify(async (trx) => {
