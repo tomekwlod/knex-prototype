@@ -265,9 +265,7 @@ const abstract = require('knex-prototype');
 
 const extend = abstract.extend;
 
-const prototype = abstract.prototype;
-
-const a = prototype.a;
+const prototype = abstract.prototype_common;
 
 const nestedset = require('knex-prototype/nestedset');
 
@@ -330,9 +328,7 @@ const {Opt} = abstract;
 
 const extend = abstract.extend;
 
-const prototype = abstract.prototype;
-
-const a = prototype.a;
+const prototype = abstract.prototype_common;
 
 const table = 'tags';
 
